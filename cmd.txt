@@ -16,3 +16,4 @@ fix DataSource.groovy to support the mysql
 
 grails clean
 grails compile-refresh-dependencies
+

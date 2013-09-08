@@ -9,4 +9,6 @@ class Book {
 		title(blank:false, nullable:false, unique:true)
 		isbn13(blank:false, unique:false)
     }
+	
+	static hasMany=[borrow:Borrow]	
 }
