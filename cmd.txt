@@ -1,1 +1,18 @@
 grails create-app phonelibV2
+
+cd phonelib_rep_v2
+
+grails create-domain-class User
+grails create-domain-class Book
+grails create-domain-class Own
+grails create-domain-class Borrow
+
+grails create-controller User
+grails create-controller Book
+grails create-controller Own
+grails create-controller Borrow
+
+fix DataSource.groovy to support the mysql
+
+grails clean
+grails compile-refresh-dependencies
