@@ -6,5 +6,5 @@ class Borrow {
 	//User owner
 	
 	Date dateCreated
-	static belongsTo=[user:User,book:Book]
+	static belongsTo=[userBorrow:User,book:Book]
 }

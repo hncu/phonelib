@@ -12,16 +12,34 @@
 		<link rel="shortcut icon" href="${resource(dir: 'images', file: 'favicon.ico')}" type="image/x-icon">
 		<link rel="apple-touch-icon" href="${resource(dir: 'images', file: 'apple-touch-icon.png')}">
 		<link rel="apple-touch-icon" sizes="114x114" href="${resource(dir: 'images', file: 'apple-touch-icon-retina.png')}">
-		<link rel="stylesheet" href="${resource(dir: 'css', file: 'main.css')}" type="text/css">
-		<link rel="stylesheet" href="${resource(dir: 'css', file: 'mobile.css')}" type="text/css">
+		<r:require modules="bootstrap"/>
+		<style type="text/css">
+	      body {
+	        padding-top: 60px;
+	        padding-bottom: 40px;
+	      }
+	    </style>
 		<g:layoutHead/>
         <r:layoutResources />
 	</head>
 	<body>
-		<div id="grailsLogo" role="banner"><a href="http://grails.org"><img src="${resource(dir: 'images', file: 'grails_logo.png')}" alt="Grails"/></a></div>
-		<g:layoutBody/>
-		<div class="footer" role="contentinfo"></div>
-		<div id="spinner" class="spinner" style="display:none;"><g:message code="spinner.alt" default="Loading&hellip;"/></div>
+		<!-- div id="grailsLogo" role="banner"><a href="http://grails.org"><img src="${resource(dir: 'images', file: 'grails_logo.png')}" alt="Grails"/></a></div> -->
+		<g:render template="/layouts/header"/>
+		<div class="container">
+				<div class="row-fluid">
+					<div class="span9"><g:layoutBody/></div>
+					<div class="span3">广告、消息
+						<ul>
+							<g:each var="c" in="${grailsApplication.controllerClasses.sort { it.fullName } }">
+								<li class="controller"><g:link controller="${c.logicalPropertyName}">${c.fullName}</g:link></li>
+							</g:each>
+						</ul>
+					</div>			
+				</div>
+			<g:render template="/layouts/footer"/>		
+		</div>
+		<!--<div class="footer" role="contentinfo"></div>
+		<div id="spinner" class="spinner" style="display:none;"><g:message code="spinner.alt" default="Loading&hellip;"/></div>-->
 		<g:javascript library="application"/>
         <r:layoutResources />
 	</body>

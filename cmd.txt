@@ -17,3 +17,5 @@ fix DataSource.groovy to support the mysql
 grails clean
 grails compile-refresh-dependencies
 
+打开项目中conf/BuildConfig，在runtime中增加[runtime ":twitter-bootstrap:2.2.2"]插件依赖，
+>$grails compile
