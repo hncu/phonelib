@@ -3,8 +3,9 @@ package phonelibv2
 import java.util.Date;
 
 class Borrow {
-	//User owner
+	User owner
+	User borrower
 	
 	Date dateCreated
-	static belongsTo=[userBorrow:User,book:Book]
+	static belongsTo=[book:Book]
 }

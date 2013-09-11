@@ -10,5 +10,5 @@ class Book {
 		isbn13(blank:false, unique:false)
     }
 	
-	static hasMany=[borrow:Borrow]	
+	static hasMany=[own:Own,borrow:Borrow]	
 }

@@ -9,5 +9,6 @@ class User {
 		login(blank:false, nullable:false, unique:true)
 		password(blank:false, password:true)
 	}
-	static hasMany=[borrow:Borrow,own:Own]
+	static mappedBy=[owner:'owner',borrower:'borrower']
+	static hasMany=[owner:Borrow,borrower:Borrow,own:Own]
 }
