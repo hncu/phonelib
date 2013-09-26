@@ -1,7 +1,7 @@
 <!doctype html>
 <html>
 	<head>
-		<meta name="layout" content="main"/>
+		<meta name="layout" content="main_index"/>
 		<title>Welcome to Grails</title>
 		<style type="text/css" media="screen">
 			#status {
@@ -81,7 +81,7 @@
 		</style>
 	</head>
 	<body>
-		<a href="#page-body" class="skip"><g:message code="default.link.skip.label" default="Skip to content&hellip;"/></a>
+		<!-- <a href="#page-body" class="skip"><g:message code="default.link.skip.label" default="Skip to content&hellip;"/></a> -->
 
 		<div id="page-body" role="main">
 			<h1>Welcome to Grails</h1>

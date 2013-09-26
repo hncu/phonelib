@@ -27,16 +27,9 @@
 		<g:render template="/layouts/header"/>
 		<div class="container">
 				<div class="row-fluid">
-					<div class="span9"><g:layoutBody/></div>
-					<div class="span3">广告、消息
-						<ul>
-							<g:each var="c" in="${grailsApplication.controllerClasses.sort { it.fullName } }">
-								<li class="controller"><g:link controller="${c.logicalPropertyName}">${c.fullName}</g:link></li>
-							</g:each>
-						</ul>
-					</div>
+					<g:layoutBody/></div>
 				</div>
-			<g:render template="/layouts/footer"/>
+			<g:render template="/layouts/footer"/>		
 		</div>
 		<!--<div class="footer" role="contentinfo"></div>
 		<div id="spinner" class="spinner" style="display:none;"><g:message code="spinner.alt" default="Loading&hellip;"/></div>-->

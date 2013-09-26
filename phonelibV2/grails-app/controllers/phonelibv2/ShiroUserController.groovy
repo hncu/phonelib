@@ -1,6 +1,6 @@
 package phonelibv2
 
-class UserController {
+class ShiroUserController {
 
     def scaffold = true
 }
