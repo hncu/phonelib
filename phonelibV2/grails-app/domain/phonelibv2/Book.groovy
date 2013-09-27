@@ -6,7 +6,7 @@ class Book {
 	String isbn13
 	
     static constraints = {
-		title(blank:false, nullable:false, unique:true)
+		title(blank:false, nullable:false, unique:false)
 		isbn13(blank:false, unique:false)
     }
 	

@@ -1,10 +1,15 @@
 import phonelibv2.*
 import grails.util.GrailsUtil
+import java.util.Date
 
 class BootStrap {
 
 	def shiroSecurityService
-
+	def book_isbn = ['9787111187776','9787512500983','9787208061644',
+					'9787544253994','9787561339121','9787532725694',
+					'9787505722460','9787532756728','9787208050037',
+					'9787536692930','9787532731077','9787020024759',
+					'9787542629586','9787805508405','9787508630069']
 	def init = { servletContext ->
 		switch (GrailsUtil.environment) {
 
@@ -12,6 +17,7 @@ class BootStrap {
 				createTestingUsers()
 				createTestingBooks()
 				createTestingOwns()
+				createTestingBorrows()
 				break;
 
 			case "production":
@@ -23,7 +29,6 @@ class BootStrap {
 	}
 
 	void createTestingRoles(){
-
 	}
 
 	void createTestingUsers(){
@@ -57,7 +62,7 @@ class BootStrap {
 		assert standardUser.addToRoles(userRole)
 		.save(flush: true, failOnError: true)
 
-		for(i in 1..15) {
+		for(i in 0..14) {
 			def jane = ShiroUser.findByUsername("knight${i}") ?:
 					new ShiroUser(username:"knight${i}",
 					passwordHash:shiroSecurityService.encodePassword('123456'))
@@ -71,10 +76,10 @@ class BootStrap {
 	}
 
 	void createTestingBooks(){
-		for(i in 1..15) {
+		for(i in 0..14) {
 			def book1 = new Book(
 					title:"title${i}",
-					isbn13:"9787111187776",
+					isbn13:book_isbn[i],
 					)
 			book1.save()
 			if(book1.hasErrors()){
@@ -84,39 +89,32 @@ class BootStrap {
 	}
 
 	void createTestingOwns(){
-		/*for(i in 1..15) {
-		 def book2 = new Book(
-		 title:"title${i}",
-		 isbn13:"9787111187776",
-		 )
-		 book2.save()
-		 def jane = new User(
-		 login:"knight${i}",
-		 password:"123456",
-		 )
-		 jane.save()
-		 def own1 = new Own(
-		 book:book2,
-		 user:jane,
-		 )
-		 own1.save()
-		 if(own1.hasErrors()){
-		 println own1.errors
-		 }
-		 }*/
+		for(i in 0..14) {
+			def book=Book.findByIsbn13(book_isbn[i])
+			def user=ShiroUser.findByUsername("knight${i}")
+			def now =new Date()
+			
+			def own =new Own(book:book,user:user,dateCreated:now)
+			own.save()
+			if(own.hasErrors()){
+				println own.errors
+				}
+		 }		
 	}
 
 	void createTestingBorrows(){
-		/*	for(i in 1..15) {
-		 def Borrow1 = new Borrow(
-		 //book:book1,
-		 //userBorrow:user(1),
-		 )
-		 Borrow1.save()
-		 if(Borrow1.hasErrors()){
-		 println Borrow1.errors
-		 }
-		 }*/
+		for(i in 0..13) {
+			def book=Book.findByIsbn13(book_isbn[i])
+			def owner=ShiroUser.findByUsername("knight${i}")
+			def borrower=ShiroUser.findByUsername("knight${i+1}")
+			def now =new Date()
+						
+			def borrow = new Borrow(owner:owner,borrower:borrower,book:book,dateCreated:now)
+			borrow.save()
+			if(borrow.hasErrors()){
+				println borrow.errors
+			}
+		}
 	}
 }
 
