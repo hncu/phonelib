@@ -6,6 +6,13 @@
 		<meta name="layout" content="main">
 		<g:set var="entityName" value="${message(code: 'book.label', default: 'Book')}" />
 		<title><g:message code="default.list.label" args="[entityName]" /></title>
+		
+			<style type="text/css" media="screen">
+				#booksList li {
+					width: 110px;
+					float: left;
+				}
+			</style>
 	</head>
 	<body>
 		<a href="#list-book" class="skip" tabindex="-1"><g:message code="default.link.skip.label" default="Skip to content&hellip;"/></a>
@@ -20,25 +27,14 @@
 			<g:if test="${flash.message}">
 			<div class="message" role="status">${flash.message}</div>
 			</g:if>
-			<table>
-				<thead>
-					<tr>
-					
-						<g:sortableColumn property="title" title="${message(code: 'book.title.label', default: 'Title')}" />
-					
-						<g:sortableColumn property="isbn13" title="${message(code: 'book.isbn13.label', default: 'Isbn13')}" />
-					
-					</tr>
-				</thead>
-				<tbody>
-				<g:each in="${bookInstanceList}" status="i" var="bookInstance">
-					<tr class="${(i % 2) == 0 ? 'even' : 'odd'}">
-					
-						<td><g:link action="show" id="${bookInstance.id}">${fieldValue(bean: bookInstance, field: "title")}</g:link></td>
-					
-						<td>${fieldValue(bean: bookInstance, field: "isbn13")}</td>
-						<td id=${bookInstance.isbn13}></td>
-						
+				<div>
+					<ul id="booksList">
+						<g:each in="${bookInstanceList}" status="i" var="bookInstance">
+							<li>
+								<a id=${bookInstance.isbn13} href="<g:createLink action="show" id="${bookInstance.id}"/>"></a>
+								<br/>
+								<a id=${bookInstance.isbn13}title></a>
+							</li>
 <script type="text/javascript" src="/phonelibV2/js/douban_api.js"></script>
 <script>
 //alert(${bookInstance.isbn13});
@@ -46,17 +42,19 @@ DOUBAN.apikey =
 	DOUBAN.getISBNBook({
 	    isbn:${bookInstance.isbn13},
 	    callback:function(re){
-	        //alert(re.title);
 	       eletest=document.getElementById(re.isbn13);
-	       eletest.innerHTML=re.title; 
-	       eletest.parentNode.appendChild()
+	       eletest.innerHTML='<img src="'+re.images.medium+'"></img>'; 
+	       // alert(re.title);
+	       //eletest.parentNode.appendChild(re.title);
+	       //alert(re.isbn13);
+	       eletest=document.getElementById(re.isbn13+"title");
+	       eletest.innerHTML=re.title;
 	    }
 	})
-</script>					
-					</tr>
-				</g:each>
-				</tbody>
-			</table>
+</script>							
+						</g:each>
+					</ul>
+				</div>	
 			<div class="pagination">
 				<g:paginate total="${bookInstanceTotal}" />
 			</div>
