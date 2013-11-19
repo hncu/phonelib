@@ -23,3 +23,4 @@ grails compile-refresh-dependencies
 add shiro
 
 grails generate-all phonelibv2.Book
+grails generate-all phonelibv2.Own

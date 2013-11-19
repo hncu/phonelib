@@ -5,6 +5,7 @@ import org.apache.shiro.authc.UsernamePasswordToken
 import org.apache.shiro.web.util.SavedRequest
 import org.apache.shiro.web.util.WebUtils
 import org.apache.shiro.grails.ConfigUtils
+import org.apache.shiro.session.Session
 
 class AuthController {
     def shiroSecurityManager
@@ -39,6 +40,9 @@ class AuthController {
             // will be thrown if the username is unrecognised or the
             // password is incorrect.
             SecurityUtils.subject.login(authToken)
+			Session session=SecurityUtils.subject.getSession()
+			session.setAttribute("ShiroUser", ShiroUser.findByUsername(params.username))
+			
 
             log.info "Redirecting to '${targetUri}'."
             redirect(uri: targetUri)
