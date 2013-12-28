@@ -1,0 +1,75 @@
+@charset "utf-8";
+/* CSS Document */
+
+.line_break{white-space: pre-wrap;word-wrap: break-word;}
+#process {
+    margin: 0 auto;
+    padding: 25px 30px 80px 0;
+}
+#process li{ text-decoration:none; list-style:none}
+#process .node {
+    width: 13px;
+}
+#process .node, #process .proce {
+    background-image: url("../images/bg_state.jpg");
+    background-repeat: no-repeat;
+    float: left;
+    height: 13px;
+    position: relative;
+}
+
+.node.ready {
+    background-position: -150px 0;
+}
+#process .proce {
+    -moz-border-bottom-colors: none;
+    -moz-border-left-colors: none;
+    -moz-border-right-colors: none;
+    -moz-border-top-colors: none;
+    border-color: #FFFFFF;
+    border-image: none;
+    border-style: solid;
+    border-width: 0 5px;
+    width: 150px;
+}
+#process .tx1 {
+    height: 36px;
+    margin-bottom: 16px;
+}
+#process .tx3 {
+    color: #999999;
+    line-height: 15px;
+}
+.node.wait {
+    background-position: -150px -40px;
+}
+.node.singular {
+    background-position: -150px -60px;
+}
+.proce.wait {
+    background-position: 0 -40px;
+}
+.proce.doing {
+    background-position: 0 -20px;
+    color: #336600;
+}
+.proce.ready {
+    background-position: 0 0;
+}
+#process .wait .tx2 {
+    color: #999999;
+}
+#process ul {
+    margin-top: -38px;
+    position: absolute;
+    text-align: center;
+}
+#process .proce ul {
+    width: 150px;
+    z-index: 5;
+}
+#process .node ul {
+    margin-left: -120px;
+    width: 318px;
+    z-index: 1;
+}

@@ -1,0 +1,40 @@
+<html><head>
+<meta http-equiv="Content-type" content="text/html; charset=UTF-8">
+<title>Grails参考手册</title>
+<link rel="stylesheet" href="index_data/ref.css" type="text/css" media="screen" title="Ref" charset="utf-8">
+</head>
+<body class="body">
+<h1>bootstrap</h1>
+<p class="paragraph">
+</p><h2>用途</h2>
+<p class="paragraph">当一个容器外的Grails应用实例需要引用Grails'
+ApplicationContext(应用上下文)时，就可以通过其他脚本调用<a href="http://itrc.jju.edu.cn/1.1/ref/Command%20Line/bootstrap.html" class="commandLine">bootstrap</a>命令来达到目的。
+</p><p class="paragraph">其使用的例子包括Grail的<a href="http://itrc.jju.edu.cn/1.1/ref/Command%20Line/shell.html" class="commandLine">shell</a>和<a href="http://itrc.jju.edu.cn/1.1/ref/Command%20Line/console.html" class="commandLine">console(控制台)</a>
+</p><p class="paragraph">
+</p><h2>举例</h2>
+<p class="paragraph">内嵌(include)使用的话必须在Gant脚本最前面插入下面的语句：
+</p><p class="paragraph">
+</p><div class="code"><pre>includeTargets &lt;&lt; <span class="java-keyword">new</span> File ( <span class="java-quote">"${grailsHome}/scripts/Bootstrap.groovy"</span> )</pre></div>
+<p class="paragraph">上面的脚本写好后你可以通过2种不同的方法配置Grails：
+</p><ul class="star">
+	<li><code>loadApp</code> - 加载并创建GrailsApplication实例</li>
+	<li><code>configureApp</code> - 加载所有的Grails插件并创建Spring
+	ApplicationContext实例</li>
+</ul>
+<p class="paragraph"><code>loadApp</code>命令会创建一个<code>grailsApp</code>的变量供你调用：
+</p><p class="paragraph">
+</p><div class="code"><pre>loadApp()
+grailsApp.allClasses.each { println it }</pre></div>
+<p class="paragraph"><code>configureApp</code>命令会创建<code>pluginManager</code>和<code>appCtx</code>
+2个变量，分别是<a href="http://itrc.jju.edu.cn/1.1/api/org/codehaus/groovy/grails/plugins/GrailsPluginManager.html" class="api">GrailsPluginManager</a>和Spring <code>ApplicationContext</code>的实例。
+</p><p class="paragraph">
+</p><div class="code"><pre>configureApp()
+Connection c = appCtx.getBean('dataSource').getConnection()
+// <span class="java-keyword">do</span> something with connection</pre></div>
+<p class="paragraph">
+</p><h2>描述</h2>
+<p class="paragraph">用法:
+</p><div class="code"><pre>grails bootstrap</pre></div>
+<p class="paragraph">
+
+</p></body></html>

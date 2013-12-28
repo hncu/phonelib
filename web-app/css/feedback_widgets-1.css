@@ -1,0 +1,181 @@
+.dn {
+  display: none;
+}
+#feedback_overlay {
+  height: 100%;
+  _height: expression(documentElement.scrollTop+document.documentElement.clientHeight);
+  width: 100%;
+  left: 0;
+  top: 0;
+  z-index: 111110001;
+  position: fixed;
+  _position: absolute;
+}
+#feedback_screen { 
+  top: 0;
+  left: 0;
+  height: 100%;
+  _height: expression(documentElement.scrollTop+document.documentElement.clientHeight);
+  width: 100%;
+  position: absolute;
+/*  background: #000 url(../img/widgets/overlay.png) repeat scroll 0 0;*/
+  background: #000;
+  opacity: 0.75;
+  -moz-opacity: 0.75;
+  filter: alpha(opacity=75);
+  /*opacity: 0.45;
+    -moz-opacity: 0.45;
+    filter: alpha(opacity=45);*/
+  z-index: 1;
+}
+#feedback_container {
+  background-color: transparent; 
+  background-image: none;
+  width: 675px;
+  height: 445px;
+  top: 15%;
+  z-index: 111111111;
+  position: fixed;
+}
+* html #feedback_container {
+  top: expression(documentElement.scrollTop + 100 + 'px');
+  position: absolute;
+}
+#feedback_iframe {
+  margin: 15px;
+  height: 445px;
+  width: 645px;
+}
+* html #feedback_tab {
+  position: absolute;
+  top: expression(documentElement.scrollTop+document.documentElement.clientHeight/4);
+  cursor: hand;
+}
+#feedback_tab {
+  top: 25%; 
+  cursor: pointer;
+  text-decoration: none;
+  position: fixed;
+  z-index: 111110000; 
+  font-family: '';
+  font-size: 16px;
+}
+
+* html #feedback_tab.bottom_right {
+  top: expression(documentElement.scrollTop+document.documentElement.clientHeight);
+}
+/*#feedback_tab.bottom_right {
+  top: auto;
+  bottom: 0;
+  right: 10px; 
+  cursor: pointer;
+  text-decoration: none;
+  position: fixed;
+  z-index: 111110000; 
+  width: auto;
+  height: auto;
+  padding: 0;
+}
+#feedback_tab.bottom_right.define {
+  padding: 6px 15px;
+}
+#feedback_tab.bottom_right img {height: 35px;width:auto;margin:0}
+a.geekui_feedback_tab.bottom_right:hover { margin-bottom: 2px; }*/
+
+
+a.geekui_feedback_tab.right { right: 0; }
+a.geekui_feedback_tab.left { left: 0; }
+/*a.geekui_feedback_tab.bottom_right { right: 10px;top:auto;bottom:0 }*/
+#feedback_tab.bottom_right {
+/*  top: auto;*/
+  top: 100%;
+  margin-top: -35px;
+  bottom: 0;
+  right: 10px; 
+  padding: 0;
+  width: auto;
+  display: block;
+  line-height: 35px;
+}
+#feedback_tab.bottom_right span {
+  margin: 0 15px;
+}
+/** html #feedback_tab.bottom_right {
+  top: expression(documentElement.scrollTop+document.documentElement.clientHeight);
+}*/
+#feedback_tab.bottom_right:hover {margin-top: -37px;}
+a.geekui_feedback_tab.right:hover { margin-right: 2px; }
+a.geekui_feedback_tab.left:hover { margin-left: 2px; }
+a.geekui_feedback_tab.border.right {border-style: solid none solid solid;}
+a.geekui_feedback_tab.border.left {border-style: solid solid solid none;}
+a.geekui_feedback_tab.border.bottom_right {border-style: solid solid none solid;}
+a.geekui_feedback_tab.define {
+  width: 30px;
+  font: bold 16px/1.1 "Microsoft YaHei",Tahoma,Arial,Verdana,Helvetica,"宋体",sans-serif;
+  padding: 10px 0 6px 0;
+  text-align: center;
+  text-decoration: none;
+}
+
+#feedback_tab.bottom_right.define {
+  
+}
+a.geekui_feedback_tab.logo {
+  background-image: url(../img/widgets/logo.png);
+  background-repeat: no-repeat;
+  background-position: center 5px;
+  _background: none;
+  _filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src="http://geekui.com/static/img/widgets/logo.png", sizingMethod="crop");
+}
+
+
+a.geekui_feedback_tab.border {border-width: 2px;}
+a.geekui_feedback_tab.pic {
+  background-color: transparent;
+  width: /*35*/30px;
+  height: 102px;
+  border: medium none;
+  margin: 0;
+  padding: 0;
+  float: none;
+}
+#feedback_tab img {
+  border-style: none;
+  height: /*85*/102px;
+  width: /*30*/35px;
+}
+#feedback_tab.bottom_right img {height: 35px;width:auto;margin:0}
+#feedback_close {
+  background-image: url(../img/widgets/feedback-close.png);
+  cursor: pointer;
+  height: 40px;
+  padding: 0; /* css overwrite */
+  outline: none;
+  overflow: hidden;
+  right: 90px;
+  top: 0;
+  width: 40px;
+  position: absolute;
+  z-index: 4;
+  _background: none;
+  _filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src="http://geekui.com/static/img/widgets/feedback-close.png", sizingMethod="crop");
+}
+#feedback_close.loaded {
+  right: 0;
+}
+#feedback_loading {
+  position: absolute;
+  width: 390px;
+  height: 180px;
+  left: 175px;
+  top: 10px;
+  background: #fff;
+}
+#feedback_loading img {
+ position:absolute;
+ left: 165px;
+ top: 55px;   
+}
+.feedback_tab_on embed, .feedback_tab_on select, .feedback_tab_on object {
+  visibility: hidden;
+} 
