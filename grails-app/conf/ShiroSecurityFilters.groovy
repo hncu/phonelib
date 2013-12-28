@@ -21,6 +21,7 @@ class ShiroSecurityFilters {
 	 * against.
 	 */
 	static authenticatedActions = [
+		[controller: 'internalMessage', action: '*', roles: ['ROLE_ADMIN', 'ROLE_USER']],
 		[controller: 'own', action: '*', roles: ['ROLE_ADMIN', 'ROLE_USER']],
 		[controller: 'borrow', action: '*', roles: ['ROLE_ADMIN', 'ROLE_USER']],
 		[controller: 'shiroUser', action: '*', roles: ['ROLE_ADMIN']]

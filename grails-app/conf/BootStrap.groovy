@@ -17,9 +17,9 @@ class BootStrap {
 			case  "development":
 				createTestingUsers()
 				createTestingCategorys()
-				createTestingBooks()
-				createTestingOwns()
-				createTestingBorrows()
+		/*		createTestingBooks()
+//				createTestingOwns()
+				createTestingBorrows()*/
 				break;
 
 			case "production":

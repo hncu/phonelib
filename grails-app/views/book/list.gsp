@@ -1,180 +1,148 @@
 
-<%@ page import="phonelibv2.Book" %>
+<%@ page import="phonelibv2.Book"%>
 <!doctype html>
 
 <html>
-	<head>
-		<meta name="layout" content="main">
-		<g:set var="entityName" value="${message(code: 'book.label', default: 'Book')}" />
-		<title><g:message code="default.list.label" args="[entityName]" /></title>
-		
-		<script type="text/javascript" src="/phonelibV2/js/douban_api.js"></script>
+<head>
+<meta name="layout" content="main">
+<g:set var="entityName"
+	value="${message(code: 'book.label', default: 'Book')}" />
+<title><g:message code="default.list.label" args="[entityName]" /></title>
 
-		
-	</head>
-	<body>
-	
-<div class="navbar navbar-fixed-top">
-	<div class="navbar-inner">
-		<div class="container">
-			<button type="button" class="btn btn-navbar" data-toggle="collapse"
-				data-target=".nav-collapse">
-				<span class="icon-bar"></span> <span class="icon-bar"></span> <span
-					class="icon-bar"></span>
-			</button>
-			<a class="brand" href="/phonelibV2/">手机图书馆</a>
-			<div class="nav-collapse collapse">
-				<ul class="nav">
-					<li class="divider-vertical"></li>
-					<shiro:isNotLoggedIn>
-						<li ><a href="/phonelibV2/">首页</a></li>
-					</shiro:isNotLoggedIn>
-					<shiro:isLoggedIn>
-						<li ><a href="/phonelibV2/book/list">首页</a></li>
-					</shiro:isLoggedIn>
-					<li class="divider-vertical"></li>
-					<li class="active"><a href="/phonelibV2/book/list">馆藏图书</a></li>
-					<li class="divider-vertical"></li>
-					<shiro:hasRole name="ROLE_ADMIN">
-						<li><a href="/phonelibV2/shiroUser/list">用户管理</a></li>
-						<li class="divider-vertical"></li>
-					</shiro:hasRole>
+<script type="text/javascript" src="/phonelibV2/js/douban_api.js"></script>
+<style type="text/css">
+.category {
+	font-size: 14px;
+	line-height: 40px;
+	list-style-type: none;
+	background: #EEEEEE;
+	font-size: 14px;
+	height: 38px;
+	line-height: 40px;
+	margin-left: 6px;
+	margin-top: 1px;
+	text-indent: 36px;
+	width: 160px;
+}
+</style>
+</head>
+<body>
 
-					<li class="dropdown"><a href="#" class="dropdown-toggle"
-						data-toggle="dropdown">个人图书管理 <b class="caret"></b></a>
-						<ul class="dropdown-menu">
-							<li><a href="/phonelibV2/own/list">我的图书</a></li>
-							<li><a href="/phonelibV2/borrow/list">借出图书</a></li>
-							<li><a href="/phonelibV2/borrow/list">借入图书</a></li>
-						</ul></li>
-				</ul>
-				<shiro:isLoggedIn>
-				
-					 <ul class="nav pull-right">
-                    <li class="dropdown">
-		<a class="dropdown-toggle"  href="#">
-          <i class="icon-envelope"></i> 站内信
-          <span class="badge badge-info msg_num hide"></span></a></li>
-		<li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" href="#"><shiro:principal /><b class="caret"></b> </a>
-		<ul class="dropdown-menu">
-		<li > <a href="#"> <i class="icon-cog"></i> 个人设置 </a> </li>
-		
-		
-		<li class="divider">&nbsp;</li>
-		<li><a href="/phonelibV2/auth/signOut"><i class="icon-off"></i>  退出</a></li>
-	</ul></li>
-                  </ul>
-                  
-								
-					 
-										
-				</shiro:isLoggedIn>
-				<shiro:isNotLoggedIn>              
-						
-						<ul class="nav pull-right">
-                    <li><a href="/phonelibV2/signup/index">注册</a></li>
-          <li class="divider-vertical"></li>
-          <li class="dropdown"> <a class="dropdown-toggle" href="http://www.ycpai.com/index/login" data-toggle="dropdown">登录 <strong class="caret"></strong></a>
-            <div class="dropdown-menu" style="padding: 15px; padding-bottom: 0px;">
-              <form action="/phonelibV2/auth/signIn" id="myform" method="POST">
-                <input style="margin-bottom: 15px;" type="text" placeholder="邮箱" id="username" name="username">
-                <input style="margin-bottom: 15px;" type="password" placeholder="密码" id="password" name="password">
-                <input class="btn btn-primary btn-block" type="submit" id="sign-in" value="登录">
-              </form>
-              	
-               <span style="height:10px; width:10px; display:block"></span>
-              </div>
-          </li>
-                  </ul>
-						
-						
-					
-				</shiro:isNotLoggedIn>
-			</div>
-			<!--/.nav-collapse -->
+
+
+
+	<div>
+		<div class="span3">
+			<ul>
+				<li class="nav-header"><h3>图书类别</h3></li>
+
+				<!-- 分类加载-->
+				<li class="categpry"><g:link url="/phonelibV2/book/list">全部</g:link>
+				</li>
+				<g:each in="${categoryInstanceList}" status="i"
+					var="categoryInstance">
+					<div>
+						<li class="category"><g:link controller="book"
+								action="category" id="${categoryInstance.id}">
+								${categoryInstance.cname}
+							</g:link></li>
+
+					</div>
+				</g:each>
+			</ul>
 		</div>
-	</div>
-</div>
-		
-		
+
+		<!-- end book category -->
+
+		<div class="span9">
+
 			<div>
-			<div class="span3">
-				<ul class="well sidebar-nav">
-        					<li class="nav-header"><h3>图书类别</h3></li>
-        					
-							<!-- 分类加载-->
-							 <g:link url="/phonelibV2/book/list">全部</g:link>
-							 
-								<g:each in="${categoryInstanceList}" status="i" var="categoryInstance">
-								
-								<li class="nav" style="list-style-type:none">
-					 			
-								<g:link controller="book"  action="category" id="${categoryInstance.id}">${categoryInstance.cname}</g:link>
-								</li>
-	
-							</g:each>
-						</ul>
-			</div>
-			
-			<div class="span9">
-				<g:link  action="create">创建新书</g:link>  
-				<g:form class="form-search" action="search">  
-					<g:textField name="bookName"/>  <g:submitButton  type="submit" name="搜索" class="btn"/>
+				<g:link action="create">创建新书</g:link>
+				<g:form class="form-search" action="search">
+					<g:textField name="bookName" />
+					<g:submitButton type="submit" name="搜索" class="btn" />
 				</g:form>
-		
-		<div id="list-book" class="content scaffold-list" role="main">
-			<h1>图书列表</h1>
-			<g:if test="${flash.message}">
-			<div class="message" role="status">${flash.message}</div>
-			</g:if>
-			
-				
+
+				<!-- book list -->
+				<h1>图书列表</h1>
+
+
+			</div>
+
+			<div id="list-book" class="content scaffold-list" role="main">
+				<g:if test="${flash.message}">
+					<div class="message" role="status">
+						${flash.message}
+					</div>
+				</g:if>
+
+
 				<ul class="thumbnails">
-				
-				<g:each in="${bookInstanceList}" status="i" var="bookInstance">
-					
-					<li style="margin:10px 7px 5px 7px;" >
-					<a class="thumbnail" data-toggle="modal" data-target="#myModal${bookInstance.isbn13}" href="javascript:" >	
-						<div id=${bookInstance.isbn13}.img></div>
-						 <div class="caption" id=${bookInstance.isbn13}.title></div>
-						 
-					</a>
-					
-					<div class="modal hide fade" id="myModal${bookInstance.isbn13}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-					  <div class="modal-dialog">
-					    <div class="modal-content">
-					      <div class="modal-header">
-					        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-					        <h4 class="modal-title" id="myModalLabel"><div id="${bookInstance.isbn13}.title.dialog"></div></h4>
-					      </div>
-					      <div class="modal-body">
-					     	 <div class="row-fluid">
-					     	   <div class="span3">
-						       	<div id=${bookInstance.isbn13}.img.dialog></div>
-						       </div>
-						       	<div class="span9" >
-						       		分类：<div id=${bookInstance.isbn13}.x.dialog></div>
-						       		isbn:${bookInstance.isbn13}
-							       	<div id=${bookInstance.isbn13}.author.dialog></div>
-							       	<div id=${bookInstance.isbn13}.publisher.dialog></div>
-							       	<div id=${bookInstance.isbn13}.pubdate.dialog></div>
-						       	</div>
-						      </div>
-						      <div class="span12">
-						      	<h5 style="color: #888888;">--内容简介--</h5>
-						      	<div id=${bookInstance.isbn13}.summary> </div>
-						      </div>
-						  </div>
-					      <div class="modal-footer">
-					        <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
-					        <button type="button" class="btn btn-primary">Save changes</button>
-					      </div>
-					    </div><!-- /.modal-content -->
-					  </div><!-- /.modal-dialog -->
-					</div><!-- /.modal -->
-					</li>
-					
-					<script type="text/javascript">
+
+					<g:each in="${bookInstanceList}" status="i" var="bookInstance">
+
+						<li style="margin: 10px 7px 5px 7px;"><a class="thumbnail"
+							data-toggle="modal" data-target="#myModal${bookInstance.isbn13}"
+							href="javascript:">
+								<div id=${bookInstance.isbn13}.img></div>
+								<div class="caption" id=${bookInstance.isbn13}.title></div>
+
+						</a>
+							<div class="modal hide fade" id="myModal${bookInstance.isbn13}"
+								tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+								aria-hidden="true">
+								<div class="modal-dialog">
+									<div class="modal-content">
+										<div class="modal-header">
+											<button type="button" class="close" data-dismiss="modal"
+												aria-hidden="true">&times;</button>
+											<h4 class="modal-title" id="myModalLabel">
+												<div id="${bookInstance.isbn13}.title.dialog"></div>
+											</h4>
+										</div>
+										<div class="modal-body">
+											<div class="row-fluid">
+												<div class="span3">
+													<div id=${bookInstance.isbn13}.img.dialog></div>
+												</div>
+												<div class="span9">
+													拥有者:<g:each in="${(bookInstance.own.user)}" var="userInstance">
+																<g:link action = "searchByUser" id ="${userInstance.id }">${ userInstance.username}
+																</g:link>
+												 	    	</g:each>
+													<br/>
+													分类：${fieldValue(bean: bookInstance, field: "category.cname")}</br>
+													isbn:${bookInstance.isbn13}
+													<div id=${bookInstance.isbn13}.author.dialog></div>
+													<div id=${bookInstance.isbn13}.publisher.dialog></div>
+													<div id=${bookInstance.isbn13}.pubdate.dialog></div>
+												</div>
+											</div>
+											<div class="span12">
+												<h5 style="color: #888888;">--内容简介--</h5>
+												<div id=${bookInstance.isbn13}.summary></div>
+											</div>
+										</div>
+										<div class="modal-footer">
+											<button type="button" class="btn btn-default"
+												data-dismiss="modal">关闭</button>
+											<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">借书 <span class="caret"></span></button>
+										        <ul class="dropdown-menu pull-right">
+										          <li><a href="#">选择拥有者</a></li>
+										          <g:each in="${(bookInstance.own.user)}" var="userInstance">
+														<li><g:link controller="borrow" action = "borrowBookAdd" params ="[userId:userInstance.id,bookId:bookInstance.id]">${ userInstance.username}
+														</g:link></li>
+												  </g:each>
+										        </ul>
+										</div>
+									</div>
+									<!-- /.modal-content -->
+								</div>
+								<!-- /.modal-dialog -->
+							</div>
+							<!-- /.modal --></li>
+
+						<script type="text/javascript">
 					DOUBAN.apikey = 
 						DOUBAN.getISBNBook({
 						    isbn:${bookInstance.isbn13},
@@ -197,17 +165,17 @@
 						    }
 						})
 					</script>
-					
-				</g:each>
-			</ul>
-			
+
+					</g:each>
+				</ul>
+				<!-- end booklist -->
 				<div class="pagination">
 					<g:paginate total="${bookInstanceTotal}" />
 				</div>
 			</div>
-			</div>
-				
-			<div class="span3">dfaasdf</div>
 		</div>
-	</body>
+
+
+	</div>
+</body>
 </html>

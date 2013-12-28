@@ -8,7 +8,7 @@ import org.junit.*
 /**
  * See the API for {@link grails.test.mixin.domain.DomainClassUnitTestMixin} for usage instructions
  */
-@TestFor(Categroy)
+//@TestFor(Categroy)
 class CategroyTests {
 
     void testSomething() {

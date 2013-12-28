@@ -1,0 +1,125 @@
+#nickname_remark{	
+	width:238px;
+	height:42px;	
+	background: url("../../assets/nickname_remark_bg.png") no-repeat left top;	
+	color:#fff;
+	padding:4px 0px 0px 4px;
+	display:none;
+	position: absolute;  
+}
+
+.mark{
+	width:238px;
+	height:42px;	
+	background: url("../../assets/nickname_remark_bg.png") no-repeat left top;	
+	color:#fff;
+	padding:4px 0px 0px 4px;
+	display:none;
+	position: absolute;  
+}
+
+
+.setting_input_title{
+	width:68px;
+	text-align:right;
+}
+
+.setting_right{
+	padding-left:20px;
+}
+
+#middle_title{
+	font-weight:bold;
+	display:none;
+	font-size:13px;
+	margin:0px 0px 10px 0px;
+	float:left;
+}
+
+.textTitle{
+	font-weight:bold;
+	font-size:13px;	
+}
+.uploadinfo{
+	width:283px;
+	height:25px;
+	font-family:微软雅黑;
+	padding:0 14px;
+	border:1px solid #666666;
+	outline:none;
+	
+}
+
+.book_textarea{
+	outline:none;
+	width:320px;
+	height:95px;
+	font-family:微软雅黑;
+	padding:5px;
+	border:1px solid #666666;
+}
+
+
+
+.tbTitle{
+	width:60px;
+	padding:12px 0px;
+}
+
+
+.blueBtn{
+	color:#ffffff;
+	background:#23a4d6;
+	border:1px solid #2d8ab1;
+	font-size:15px;
+	font-family:微软雅黑;
+	height:35px;
+	padding:5px 14px;
+	cursor:pointer;
+}
+.greyBtn{
+	color:#ffffff;
+	font-family:微软雅黑;
+	font-size:15px;
+	background:#8c8c8c;
+	border:1px solid #717171;
+	height:35px;
+	margin-left:40px;
+	padding:5px 14px;
+	cursor:pointer;
+}
+.notice{
+	font-family:宋体;
+	font-size:12px;
+	color:#FB0B0B;
+}
+
+.uploadbtn{
+	position: relative;
+	overflow: hidden;
+	display:inline-block; 
+	*display:inline;
+	padding:5px 14px;
+	line-height:18px; 
+	*line-height:20px;
+	color:#fff; 
+	text-align:center;
+	vertical-align:middle;
+	cursor:pointer;
+	background:#23a4d6; 
+	border:1px solid #2d8ab1;
+	font-family:微软雅黑;
+	font-size:15px;
+	cursor:pointer;
+}
+
+.uploadbtn input{position: absolute;top: 0; right: 0;margin: 0;border:solid transparent; 
+opacity: 0;filter:alpha(opacity=0); cursor: pointer;}
+
+.mark{
+	display:none;
+}
+
+.span2{
+    margin-top:60px;
+}

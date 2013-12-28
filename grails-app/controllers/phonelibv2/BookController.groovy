@@ -11,8 +11,10 @@ class BookController {
     }
 
     def list() {
+		/*def bookInstance = Book.get(params.id)
+		def owner = bookInstance.own.user*/
         params.max = Math.min(params.max ? params.int('max') : 15, 100)
-        [bookInstanceList: Book.list(params),categoryInstanceList: Category.list(params), bookInstanceTotal: Book.count()]
+        [bookInstanceList: Book.list(params),categoryInstanceList: Category.list(), bookInstanceTotal: Book.count()]
     }
 
     def create() {
@@ -104,9 +106,10 @@ class BookController {
 	def search(){
 		def bookName = params.bookName
 		def books
-		
+		def bookCount
 		if(bookName.length()==13&&bookName=~'\\d'){
 			books = Book.findAllByIsbn13Like("%${bookName}%")
+			
 		}else{
 			books = Book.findAllByTitleLike("%${bookName}%")
 		}
@@ -114,6 +117,17 @@ class BookController {
 		//println(len)
 		
 		render(view:"list",model:[bookInstanceList:books,bookInstanceTotal: Book.count(), categoryInstanceList: Category.list(params)])
+	}
+	
+	def searchByUser(){
+		def user=ShiroUser.get(params.id)
+		def bookList = (user.own).book
+		def categoryList = bookList.category
+		HashSet h  = new HashSet(categoryList);
+		categoryList.clear()
+		categoryList.addAll(h)
+		render(view:"list",model:[bookInstanceList: bookList, bookInstanceTotal: Own.count(),categoryInstanceList: categoryList])
+
 	}
 	
 	def category(){
@@ -125,6 +139,7 @@ class BookController {
 		}
 		render(view:"list",model:[categoryInstanceList: Category.list(params),bookInstanceTotal: Book.count(),bookInstanceList:categoryInstance.books])
 	}
+	
 	
 	def phoneSearch(){
 		def bookName = params.bookName
@@ -143,4 +158,5 @@ class BookController {
 		}
 		render(contentType:"text/json"){ book(YN:ren)}
 	}
+	
 }

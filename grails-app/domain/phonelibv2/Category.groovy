@@ -12,5 +12,12 @@ class Category {
 	
 
 	static mappedBy=[cname:'cname']
+	
+	String toString(){
+		return cname
+	}
+	
+
+	
 
 }
