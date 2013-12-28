@@ -12,18 +12,21 @@ class AuthController {
     def index = { redirect(action: "login", params: params) }
 
     def login = {
+		def targetUri = params.targetUri
+		if(targetUri!=null){
+			flash.message = message(code: "login.unlogin")
+		}
         return [ username: params.username, rememberMe: (params.rememberMe != null), targetUri: params.targetUri ]
     }
 
     def signIn = {
-		//根据提交的数据，创建权限令牌
         def authToken = new UsernamePasswordToken(params.username, params.password as String)
 
         // Support for "remember me"
         if (params.rememberMe) {
             authToken.rememberMe = true
         }
-        //返回功能
+        
         // If a controller redirected to this page, redirect back
         // to it. Otherwise redirect to the root URI.
         def targetUri = params.targetUri ?: "/"
@@ -32,8 +35,7 @@ class AuthController {
         def savedRequest = WebUtils.getSavedRequest(request)
         if (savedRequest) {
             targetUri = savedRequest.requestURI - request.contextPath
-            if (savedRequest.queryString)
-			 targetUri = targetUri + '?' + savedRequest.queryString
+            if (savedRequest.queryString) targetUri = targetUri + '?' + savedRequest.queryString
         }
         
         try{
@@ -41,10 +43,8 @@ class AuthController {
             // will be thrown if the username is unrecognised or the
             // password is incorrect.
             SecurityUtils.subject.login(authToken)
-
             log.info "Redirecting to '${targetUri}'."
-			redirect(url:"/book/list")
-			
+            redirect(url:"/book/list")
         }
         catch (AuthenticationException ex){
             // Authentication failed, so display the appropriate message
@@ -63,7 +63,7 @@ class AuthController {
             if (params.targetUri) {
                 m["targetUri"] = params.targetUri
             }
-
+				
             // Now redirect back to the login page.
             redirect(action: "login", params: m)
         }

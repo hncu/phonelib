@@ -91,87 +91,8 @@
 		<!-- <a href="#page-body" class="skip"><g:message code="default.link.skip.label" default="Skip to content&hellip;"/></a> -->
 			
 			
-<div class="navbar navbar-fixed-top">
-	<div class="navbar-inner">
-		<div class="container">
-			<button type="button" class="btn btn-navbar" data-toggle="collapse"
-				data-target=".nav-collapse">
-				<span class="icon-bar"></span> <span class="icon-bar"></span> <span
-					class="icon-bar"></span>
-			</button>
-			<a class="brand" href="/phonelibV2/">手机图书馆</a>
-			<div class="nav-collapse collapse">
-				<ul class="nav">
-					<li class="divider-vertical"></li>
-					<shiro:isNotLoggedIn>
-						<li class="active"><a href="/phonelibV2/">首页</a></li>
-					</shiro:isNotLoggedIn>
-					<shiro:isLoggedIn>
-						<li class="active"><a href="/phonelibV2/book/list">首页</a></li>
-					</shiro:isLoggedIn>
-					<li class="divider-vertical"></li>
-					<li ><a href="/phonelibV2/book/list">馆藏图书</a></li>
-					<li class="divider-vertical"></li>
-					<shiro:hasRole name="ROLE_ADMIN">
-						<li><a href="/phonelibV2/shiroUser/list">用户管理</a></li>
-						<li class="divider-vertical"></li>
-					</shiro:hasRole>
+			
 
-					<li class="dropdown"><a href="#" class="dropdown-toggle"
-						data-toggle="dropdown">个人图书管理 <b class="caret"></b></a>
-						<ul class="dropdown-menu">
-							<li><a href="/phonelibV2/own/list">我的图书</a></li>
-							<li><a href="/phonelibV2/borrow/list">借出图书</a></li>
-							<li><a href="/phonelibV2/borrow/list">借入图书</a></li>
-						</ul></li>
-				</ul>
-				<shiro:isLoggedIn>
-				
-					 <ul class="nav pull-right">
-                    <li class="dropdown">
-		<a class="dropdown-toggle"  href="#">
-          <i class="icon-envelope"></i> 站内信
-          <span class="badge badge-info msg_num hide"></span></a></li>
-		<li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" href="#"><shiro:principal /><b class="caret"></b> </a>
-		<ul class="dropdown-menu">
-		<li > <a href="#"> <i class="icon-cog"></i> 个人设置 </a> </li>
-		
-		
-		<li class="divider">&nbsp;</li>
-		<li><a href="/phonelibV2/auth/signOut"><i class="icon-off"></i>  退出</a></li>
-	</ul></li>
-                  </ul>
-                  
-								
-					 
-										
-				</shiro:isLoggedIn>
-				<shiro:isNotLoggedIn>              
-						
-						<ul class="nav pull-right">
-                    <li><a href="/phonelibV2/signup/index">注册</a></li>
-          <li class="divider-vertical"></li>
-          <li class="dropdown"> <a class="dropdown-toggle" href="http://www.ycpai.com/index/login" data-toggle="dropdown">登录 <strong class="caret"></strong></a>
-            <div class="dropdown-menu" style="padding: 15px; padding-bottom: 0px;">
-              <form action="/phonelibV2/auth/signIn" id="myform" method="POST">
-                <input style="margin-bottom: 15px;" type="text" placeholder="邮箱" id="username" name="username">
-                <input style="margin-bottom: 15px;" type="password" placeholder="密码" id="password" name="password">
-                <input class="btn btn-primary btn-block" type="submit" id="sign-in" value="登录">
-              </form>
-              	
-               <span style="height:10px; width:10px; display:block"></span>
-              </div>
-          </li>
-                  </ul>
-						
-						
-					
-				</shiro:isNotLoggedIn>
-			</div>
-			<!--/.nav-collapse -->
-		</div>
-	</div>
-</div>
 				
 					
 		
@@ -223,20 +144,24 @@
 		        <div class="well">
 		      <form action="/phonelibV2/auth/signIn" id="myform" method="POST">
 		      <h5>用户登录</h5> 
+		      <g:if test="${flash.message}">
+    				<div class="message" style="color: red">${flash.message}</div>
+  				</g:if>
 		      <div class="all-errors"> </div>
 		      <div class="input-prepend">
 		       <span class="add-on"><i class="icon-envelope"></i></span>
-		        <input id="username" type="text" placeholder="邮件/手机" name="username" maxlength="75" class="span11" />
+		        <input id="username" type="text" value="${username}" placeholder="邮件/手机" name="username" maxlength="75" class="span11" />
 		        <div class="email_suggestion"></div>
 		      </div>
 		      <div class="input-prepend">
-		      <span class="add-on"><i class="icon-key"></i></span>
-		        <input type="password" placeholder="密码" name="password" id="password" class="span11" />
+		      <span class="add-on"><i class="icon-italic"></i></span>
+		        <input type="password"  placeholder="密码" name="password" id="password" class="span11" />
 		      </div>
 		      <div class="action">
 		        <label class="checkbox">
-		          <input type="checkbox" name="info[remember]" value="1">
-		          记住密码 </label>
+		          <td>记住我</td>
+          			<td><g:checkBox name="rememberMe" value="${rememberMe}" /></td>
+          		</label>
 		           <input type="hidden" name="dosubmit" value="1" />
 		        <input type="submit" value="登录" class="btn btn-green"/>
 		    <span style="margin-left:15px"><a href="#"><small>找回密码</small></a></span>

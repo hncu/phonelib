@@ -32,7 +32,7 @@ class BootStrap {
 
 	void createTestingRoles(){
 	}
-	
+
 	void createTestingUsers(){
 
 		// Create the admin role
@@ -115,7 +115,7 @@ class BootStrap {
 			if(own.hasErrors()){
 				println own.errors
 				}
-		 }
+		 }		
 	}
 
 	void createTestingBorrows(){

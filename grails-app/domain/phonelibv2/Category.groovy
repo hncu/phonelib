@@ -7,7 +7,7 @@ class Category {
 	static hasMany = [books:Book]
 	
 	static constraints = {
-		cname(blank:false,nullable:false, unique:true)
+		cname(blank:false)
 	}
 	
 
@@ -17,6 +17,7 @@ class Category {
 		return cname
 	}
 	
+
 	
 
 }

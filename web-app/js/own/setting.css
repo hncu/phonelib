@@ -119,3 +119,7 @@ opacity: 0;filter:alpha(opacity=0); cursor: pointer;}
 .mark{
 	display:none;
 }
+
+.span2{
+    margin-top:60px;
+}
