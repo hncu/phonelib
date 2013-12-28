@@ -1,3 +1,4 @@
+
 <%@ page import="phonelibv2.Book"%>
 <!doctype html>
 
@@ -68,6 +69,10 @@
 											class="icon-off"></i> 退出</a></li>
 								</ul></li>
 						</ul>
+
+
+
+
 					</shiro:isLoggedIn>
 					<shiro:isNotLoggedIn>
 
@@ -93,25 +98,30 @@
 									<span style="height: 10px; width: 10px; display: block"></span>
 								</div></li>
 						</ul>
+
+
+
 					</shiro:isNotLoggedIn>
 				</div>
 				<!--/.nav-collapse -->
 			</div>
 		</div>
 	</div>
+
+
 	<div>
 		<div class="span3">
 			<ul class="well sidebar-nav">
 				<li class="nav-header"><h3>图书类别</h3></li>
 
 				<!-- 分类加载-->
-				<g:link url="/phonelibV2/book/list">全部</g:link>
+				<g:link url="/phonelibV2/own/list">全部</g:link>
 
-				<g:each in="${categoryInstanceList}" status="i"
+				<g:each in="${ownInstanceList.book.category}" status="i"
 					var="categoryInstance">
 
 					<li class="nav" style="list-style-type: none"><g:link
-							controller="book" action="category" id="${categoryInstance.id}">
+							controller="own" action="category" id="${categoryInstance.id}">
 							${categoryInstance.cname}
 						</g:link></li>
 
@@ -137,17 +147,17 @@
 
 				<ul class="thumbnails">
 
-					<g:each in="${bookInstanceList}" status="i" var="bookInstance">
+					<g:each in="${ownInstanceList}" status="i" var="ownInstance">
 
 						<li style="margin: 10px 7px 5px 7px;"><a class="thumbnail"
-							data-toggle="modal" data-target="#myModal${bookInstance.isbn13}"
+							data-toggle="modal" data-target="#myModal${ownInstance.book.isbn13}"
 							href="javascript:">
-								<div id=${bookInstance.isbn13}.img></div>
-								<div class="caption" id=${bookInstance.isbn13}.title></div>
+								<div id=${ownInstance.book.isbn13}.img></div>
+								<div class="caption" id=${ownInstance.book.isbn13}.title></div>
 
 						</a>
 
-							<div class="modal hide fade" id="myModal${bookInstance.isbn13}"
+							<div class="modal hide fade" id="myModal${ownInstance.book.isbn13}"
 								tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
 								aria-hidden="true">
 								<div class="modal-dialog">
@@ -156,26 +166,26 @@
 											<button type="button" class="close" data-dismiss="modal"
 												aria-hidden="true">&times;</button>
 											<h4 class="modal-title" id="myModalLabel">
-												<div id="${bookInstance.isbn13}.title.dialog"></div>
+												<div id="${ownInstance.book.isbn13}.title.dialog"></div>
 											</h4>
 										</div>
 										<div class="modal-body">
 											<div class="row-fluid">
 												<div class="span3">
-													<div id=${bookInstance.isbn13}.img.dialog></div>
+													<div id=${ownInstance.book.isbn13}.img.dialog></div>
 												</div>
 												<div class="span9">
 													分类：
-													<div id=${bookInstance.isbn13}.x.dialog></div>
-													isbn:${bookInstance.isbn13}
-													<div id=${bookInstance.isbn13}.author.dialog></div>
-													<div id=${bookInstance.isbn13}.publisher.dialog></div>
-													<div id=${bookInstance.isbn13}.pubdate.dialog></div>
+													<div id=${ownInstance.book.isbn13}.x.dialog></div>
+													isbn:${ownInstance.book.isbn13}
+													<div id=${ownInstance.book.isbn13}.author.dialog></div>
+													<div id=${ownInstance.book.isbn13}.publisher.dialog></div>
+													<div id=${ownInstance.book.isbn13}.pubdate.dialog></div>
 												</div>
 											</div>
 											<div class="span12">
 												<h5 style="color: #888888;">--内容简介--</h5>
-												<div id=${bookInstance.isbn13}.summary></div>
+												<div id=${ownInstance.book.isbn13}.summary></div>
 											</div>
 										</div>
 										<div class="modal-footer">
@@ -188,13 +198,12 @@
 									<!-- /.modal-content -->
 								</div>
 								<!-- /.modal-dialog -->
-							</div>
-							<!-- /.modal --></li>
+							</div> <!-- /.modal --></li>
 
 						<script type="text/javascript">
 					DOUBAN.apikey = 
 						DOUBAN.getISBNBook({
-						    isbn:${bookInstance.isbn13},
+						    isbn:${ownInstance.book.isbn13},
 						    callback:function(re){
 						        //alert(re.title);
 						        var Title=re.title;
@@ -219,7 +228,7 @@
 				</ul>
 
 				<div class="pagination">
-					<g:paginate total="${bookInstanceTotal}" />
+					<g:paginate total="2" />
 				</div>
 			</div>
 		</div>

@@ -1,8 +1,8 @@
 dataSource {
     pooled = true
     driverClassName = "com.mysql.jdbc.Driver"
-    username = "root"
-    password = "admin"
+    username = "zyk"
+    password = "18273716526"
 }
 hibernate {
     cache.use_second_level_cache = true

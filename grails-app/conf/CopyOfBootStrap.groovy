@@ -2,7 +2,7 @@ import phonelibv2.*
 import grails.util.GrailsUtil
 import java.util.Date
 
-class BootStrap {
+class CopyOfBootStrap {
 
 	def shiroSecurityService
 	def book_isbn = ['9787111187776','9787512500983','9787208061644',
@@ -18,7 +18,7 @@ class BootStrap {
 				createTestingUsers()
 				createTestingCategorys()
 				createTestingBooks()
-//				createTestingOwns()
+				createTestingOwns()
 				createTestingBorrows()
 				break;
 
@@ -32,7 +32,7 @@ class BootStrap {
 
 	void createTestingRoles(){
 	}
-	
+
 	void createTestingUsers(){
 
 		// Create the admin role
@@ -115,7 +115,7 @@ class BootStrap {
 			if(own.hasErrors()){
 				println own.errors
 				}
-		 }
+		 }		
 	}
 
 	void createTestingBorrows(){

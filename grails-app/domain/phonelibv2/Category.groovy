@@ -7,10 +7,16 @@ class Category {
 	static hasMany = [books:Book]
 	
 	static constraints = {
-		cname(blank:false)
+		cname(blank:false,nullable:false, unique:true)
 	}
 	
 
 	static mappedBy=[cname:'cname']
+	
+	String toString(){
+		return cname
+	}
+	
+	
 
 }

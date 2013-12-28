@@ -16,13 +16,14 @@ class AuthController {
     }
 
     def signIn = {
+		//根据提交的数据，创建权限令牌
         def authToken = new UsernamePasswordToken(params.username, params.password as String)
 
         // Support for "remember me"
         if (params.rememberMe) {
             authToken.rememberMe = true
         }
-        
+        //返回功能
         // If a controller redirected to this page, redirect back
         // to it. Otherwise redirect to the root URI.
         def targetUri = params.targetUri ?: "/"
@@ -31,7 +32,8 @@ class AuthController {
         def savedRequest = WebUtils.getSavedRequest(request)
         if (savedRequest) {
             targetUri = savedRequest.requestURI - request.contextPath
-            if (savedRequest.queryString) targetUri = targetUri + '?' + savedRequest.queryString
+            if (savedRequest.queryString)
+			 targetUri = targetUri + '?' + savedRequest.queryString
         }
         
         try{

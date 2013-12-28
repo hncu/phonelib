@@ -1,0 +1,60 @@
+@CHARSET "UTF-8";
+
+
+#categoryTags{
+	display:inline;
+	width:268px;
+	padding:0;
+/*	background:#e1e1e1;*/ 
+	font-size: 14px;
+	font-family: 微软雅黑;
+	color:#555;
+	line-height:160%;
+	/* font-weight: bold; */
+	
+	}	
+
+
+/* Tag cloud */
+
+	#categoryTags ul{
+		margin:0em 0;
+		padding:0em 0px;
+		text-align:center;
+		//background:#FFF;		
+		}
+	#categoryTags li{
+		margin:0;
+		padding:0;
+		list-style:none;
+		display:inline;
+		}
+	#categoryTags li a{
+		text-decoration:none;
+		color:#777;
+		padding:0 1px 0px 1px;	
+		}
+	#categoryTags li a:hover{	
+		color:#69c;
+		}		
+	
+	.tag1{font-size:100%;}
+	.tag2{font-size:100%;margin-top:4px;}
+	.tag3{font-size:100%;margin-bottom:4px;}
+	
+	
+	/* alternative layout */
+
+	#categoryTags .alt{
+		text-align:left;
+		padding:0;
+		background:none;
+		}
+	#categoryTags .alt li{
+		padding:1px 1px;
+		display:block;
+		}
+	#categoryTags .alt .tag1, 
+	#categoryTags .alt .tag2, 
+	
+		
