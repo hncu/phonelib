@@ -12,7 +12,7 @@ class BookController {
 
     def list() {
         params.max = Math.min(params.max ? params.int('max') : 15, 100)
-        [bookInstanceList: Book.list(params),categoryInstanceList: Category.list(), bookInstanceTotal: Book.count()]
+        [bookInstanceList: Book.list(params),categoryInstanceList: Category.list(params), bookInstanceTotal: Book.count()]
     }
 
     def create() {
@@ -104,10 +104,9 @@ class BookController {
 	def search(){
 		def bookName = params.bookName
 		def books
-		def bookCount
+		
 		if(bookName.length()==13&&bookName=~'\\d'){
 			books = Book.findAllByIsbn13Like("%${bookName}%")
-			
 		}else{
 			books = Book.findAllByTitleLike("%${bookName}%")
 		}
@@ -116,7 +115,6 @@ class BookController {
 		
 		render(view:"list",model:[bookInstanceList:books,bookInstanceTotal: Book.count(), categoryInstanceList: Category.list(params)])
 	}
-	
 	
 	def category(){
 		def categoryInstance = Category.get(params.id)

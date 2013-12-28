@@ -18,7 +18,7 @@ class BootStrap {
 				createTestingUsers()
 				createTestingCategorys()
 				createTestingBooks()
-//				createTestingOwns()
+				createTestingOwns()
 				createTestingBorrows()
 				break;
 

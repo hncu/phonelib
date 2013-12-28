@@ -11,7 +11,7 @@ class CategoryController {
     }
 
     def list() {
-        params.max = Math.min(params.max ? params.int('max') : 25, 100)
+        params.max = Math.min(params.max ? params.int('max') : 10, 100)
         [categoryInstanceList: Category.list(params), categoryInstanceTotal: Category.count()]
     }
 

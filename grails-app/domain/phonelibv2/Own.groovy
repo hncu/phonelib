@@ -6,5 +6,4 @@ class Own {
 
 	Date dateCreated
 	static belongsTo=[user:ShiroUser,book:Book]
-
 }

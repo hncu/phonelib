@@ -12,10 +12,6 @@ class AuthController {
     def index = { redirect(action: "login", params: params) }
 
     def login = {
-		def targetUri = params.targetUri
-		if(targetUri!=null){
-			flash.message = message(code: "login.unlogin")
-		}
         return [ username: params.username, rememberMe: (params.rememberMe != null), targetUri: params.targetUri ]
     }
 
@@ -43,8 +39,10 @@ class AuthController {
             // will be thrown if the username is unrecognised or the
             // password is incorrect.
             SecurityUtils.subject.login(authToken)
+
             log.info "Redirecting to '${targetUri}'."
-            redirect(url:"/book/list")
+			redirect(url:"/book/list")
+			
         }
         catch (AuthenticationException ex){
             // Authentication failed, so display the appropriate message
@@ -63,7 +61,7 @@ class AuthController {
             if (params.targetUri) {
                 m["targetUri"] = params.targetUri
             }
-				
+
             // Now redirect back to the login page.
             redirect(action: "login", params: m)
         }
