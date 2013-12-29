@@ -7,8 +7,13 @@ class ShiroUser {
 	String btouxiang
 	String mtouxiang
 	String stouxiang
-//	String adress;
-//	String niCheng = "无名氏"
+	
+	String niCheng = "无名氏"
+	String xingMing = ""
+	String sinaWeibo
+	String qq
+	String weixin
+	String location
 //	Date   birthday
 //	String weiZhi
 //	String touXiangURL

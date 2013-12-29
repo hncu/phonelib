@@ -177,7 +177,7 @@
 				</ul>
 
 				<div class="pagination">
-					<g:paginate total="2" />
+					<g:paginate total="${ownInstanceTotal}" />
 				</div>
 			</div>
 		</div>

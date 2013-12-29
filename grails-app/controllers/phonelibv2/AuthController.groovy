@@ -111,27 +111,11 @@ class AuthController {
 			// will be thrown if the username is unrecognised or the
 			// password is incorrect.
 			SecurityUtils.subject.login(authToken)
-			log.info "Redirecting to '${targetUri}'."
+			//log.info "Redirecting to '${targetUri}'."
 			
-			
-			def user = ShiroUser.findByUsername(params.username)
-			def ownInstance = user.own
-//			println ownInstance
-//			println ownInstance.book.isbn13
-//			println ownInstance.book.isbn13
-//			for(:ownInstance){
-//				
-//			}
 			//render(contentType:"text/json"){ rend(signIn:"Y",ownInstance:ownInstance.isbn13)}
-//			def builder = new groovy.json.JsonBuilder();
 			
-			render(contentType: "text/json") { 
-//				ownInstance = ownInstance.book
-				ownInstance.book.isbn13
-		
-//				def result = new JsonSlurper().parseText(ownInstance.toString()) 
-				
-			}
+			render(contentType:"text/json"){ rend(signIn:"Y")}
 		}
 		catch (AuthenticationException ex){
 			// Authentication failed, so display the appropriate message

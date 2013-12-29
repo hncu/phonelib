@@ -2,6 +2,7 @@ package phonelibv2
 
 import org.springframework.dao.DataIntegrityViolationException
 import org.apache.shiro.SecurityUtils
+import org.codehaus.groovy.grails.web.json.JSONObject
 
 class BookController {
 
@@ -41,7 +42,7 @@ class BookController {
 			message(code: 'book.label', default: 'Book'),
 			bookInstance.id
 		])
-		render(view: "bgcreate",message:"创建成功")
+		render(view: "bgcreate",message:"鍒涘缓鎴愬姛")
     }
 
     def bgshow() {
@@ -136,21 +137,21 @@ class BookController {
 	def list() {
 		
 		def principal = SecurityUtils.subject?.principal
-		if(!principal){//没登陆不显示个人信息
+		if(!principal){//娌＄櫥闄嗕笉鏄剧ず涓汉淇℃伅
 			return [bookInstanceList: Book.list(params),categoryInstanceList: Category.list(), bookInstanceTotal: Book.count()]
 			
 		}
 		def user=ShiroUser.findByUsername(principal)
-		if(!user.btouxiang){//没有头像,显示默认头像
+		if(!user.btouxiang){//娌℃湁澶村儚,鏄剧ず榛樿澶村儚
 			def touxiangUrl = "touxiang/default_avatar.jpg"
 			return [bookInstanceList: Book.list(params),categoryInstanceList: Category.list(), bookInstanceTotal: Book.count(),shiroUserInstance:touxiangUrl]
 		}
 		
-		def tSize = "btouxiang" //btouxiang 大162x162，mtouxiang中48x48，stouxiang小20x20
+		def tSize = "btouxiang" //btouxiang 澶�62x162锛宮touxiang涓�8x48锛宻touxiang灏�0x20
 		
 //		println user.${tSize}  //D:\workspace-ggts\phonelibV2\web-app\images\touxiang\10\10\1385360315740_162.jpg
 		
-		def tIndex = user."${tSize}".indexOf("touxiang") //44,第一次发现touxiang的地方
+		def tIndex = user."${tSize}".indexOf("touxiang") //44,绗竴娆″彂鐜皌ouxiang鐨勫湴鏂�
 		def touxiang =  user."${tSize}".substring(tIndex)//touxiang\10\10\1385360315740_162.jpg  
 		def touxiangUrl = touxiang.replace('\\', '/');            //touxiang/10/10/1385360315740_162.jpg
 		params.max = Math.min(params.max ? params.int('max') : 20, 100)
@@ -183,7 +184,7 @@ class BookController {
 			bookInstance.id
 		])
 		//        redirect(action: "show", id: bookInstance.id)
-		render(view: "create",message:"创建成功")
+		render(view: "create",message:"鍒涘缓鎴愬姛")
 	}
 
 	def show() {
@@ -336,6 +337,21 @@ class BookController {
 			println(books[[]])
 		}
 		render(contentType:"text/json"){ book(YN:ren)}
+	}
+	
+	def phoneBookList(){
+		params.max = Math.min(params.max ? params.int('max') : 15, 100)
+		def bookInstanceList = Book.list(params)
+		def bookCount = Book.count()
+		JSONObject resquestBooklist = new JSONObject()
+		List booklist = []
+		bookInstanceList.each{
+			booklist.add('title':it.title,'isbn13':it.isbn13)
+		}
+		resquestBooklist.putOpt("book",booklist)
+		render(contentType:"text/json"){
+			resquestBooklist
+		}
 	}
 
 }

@@ -109,15 +109,27 @@ class OwnController {
 		}
 	
 		def list() {
-			params.max = Math.min(params.max ? params.int('max') : 10, 100)
-			def principal = SecurityUtils.subject?.principal
-			def user=ShiroUser.findByUsername(principal)
-			def ownInstance = user.own
-			def OwnList = (ownInstance.book).category
-			HashSet h  = new HashSet(OwnList);
-			OwnList.clear()
-			OwnList.addAll(h)
-			[ownInstanceList: ownInstance, ownInstanceTotal: Own.count(),categoryInstanceList: OwnList]
+			params.max = Math.min(params.max ? params.int('max') : 15, 100)	
+		def principal = SecurityUtils.subject?.principal
+		def userInstance=ShiroUser.findByUsername(principal)
+		def ownInstance = userInstance.own
+		List categoryList = (ownInstance.book).category
+		categoryList.unique()
+		
+		def searchOwnList = {
+			user{
+				eq('username',userInstance.username)
+			}
+		}
+		def c = Own.createCriteria()
+		def ownList = c.list(params,searchOwnList)
+		def ownCount = ownList.totalCount
+		[ownInstanceList: ownList, ownInstanceTotal: ownCount,categoryInstanceList: categoryList]
+		
+		/*def ownInstance = userInstance.own
+		List categoryList = (ownInstance.book).category
+		categoryList.unique()
+		[ownInstanceList: ownInstance, ownInstanceTotal: ownInstance.size(),categoryInstanceList: categoryList]*/
 		}
 	
 		def create() {
@@ -268,6 +280,36 @@ class OwnController {
 			OwnList.clear()
 			OwnList.addAll(h)
 			render(view:"list",model:[ownInstanceList: oList,ownInstanceTotal: Own.count(),categoryInstanceList: OwnList])
+		}
+		
+		def phoneSave(){
+			def book=Book.findByIsbn13(params.isbn)
+			if(book==null){
+				book = new Book()
+				book.title = params.book_name
+				book.isbn13 = params.isbn
+				def cname = params.category.id
+				def category = Category.findByCname(cname)
+				category.addToBooks(book);
+				if (!book.save(flush: true)) {
+					render(view: "create", model: [book: Book])
+					return
+				}
+			}
+		
+			def principal = SecurityUtils.subject?.principal
+			
+			def user=ShiroUser.findByUsername(principal)
+			def now =new Date()
+			def own =new Own(book:book,user:user,dateCreated:now)
+			own.save()
+			
+			if(own.hasErrors()){
+				println own.errors
+				}
+	
+			flash.message = message(code: 'default.created.message', args: [message(code: 'own.label', default: 'Own'), book.id])
+			redirect(action: "show", id: book.id)
 		}
 		
 	}

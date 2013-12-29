@@ -1,6 +1,8 @@
 package phonelibv2
 
+import org.codehaus.groovy.grails.web.json.JSONObject
 import org.springframework.dao.DataIntegrityViolationException
+import org.apache.shiro.SecurityUtils
 
 class CategoryController {
 
@@ -197,6 +199,69 @@ class CategoryController {
 				flash.message = message(code: 'default.not.deleted.message', args: [message(code: 'category.label', default: 'Category'), params.id])
 				redirect(action: "show", id: params.id)
 			}
+		}
+		
+		def phoneOwnCategoryList(){
+			def principal = SecurityUtils.subject?.principal
+			def user = ShiroUser.findByUsername(principal)
+			
+			def bookInstance = user.own.book
+			List categoryList = bookInstance.category
+			categoryList.unique()
+		//	def resquestCname=["categroy"]
+			def count = categoryList.size()
+			def resquestArray = []
+			JSONObject requestJsonObject = new JSONObject()
+			categoryList.each{
+				params.max = Math.min(params.max ? params.int('max') : 5, 100)
+				def c = Book.createCriteria()
+				String cname = it.cname
+				def searchByCategory = {
+					category{
+						eq('cname',cname)
+					}
+				}
+				def books = c.list(params,searchByCategory)
+				int bookCount = books.totalCount
+				String bookNames = ""
+				books.each {
+					bookNames +=it.title+","
+				}
+				resquestArray.add('id':it.id,'cname':"${it.cname}",'book':bookNames ,bookCount:bookCount)
+			}
+			requestJsonObject.put('categoryCount', categoryList.size())
+			requestJsonObject.putOpt('category', resquestArray)
+			
+			/*categoryList.each {
+				def resquestBook=["book"]
+				params.max = Math.min(params.max ? params.int('max') : 5, 100)
+				def c = Book.createCriteria()
+				String cname = it.cname
+				def searchByCategory = {
+					category{
+						eq('cname',cname)
+					}
+				}
+				def books = c.list(params,searchByCategory)
+				def bookCount = books.totalCount
+				books.each {
+					resquestBook.add('title':"${it.title}")
+				}
+				resquestCname.add('id':"${it.id}",'cname':"${it.cname}",'book':"${resquestBook}" ,bookCount:"${bookCount}")
+				
+			}
+			print(resquestCname)*/
+			//categoryInstance.remove("books")
+			//categoryJson.remove(categoryJson.class)
+		//	JsonBuilder category = categoryInstance
+		//	print (category.toString())
+		//	category.remove('class')
+		//	print(category)
+			render(contentType:"text/json"){
+				requestJsonObject
+			}
+			
+			
 		}
 	}
 	
