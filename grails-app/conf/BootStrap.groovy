@@ -15,11 +15,11 @@ class BootStrap {
 		switch (GrailsUtil.environment) {
 
 			case  "development":
-				createTestingUsers()
-				createTestingCategorys()
-		/*		createTestingBooks()
+//				createTestingUsers()
+//				createTestingCategorys()
+//				createTestingBooks()
 //				createTestingOwns()
-				createTestingBorrows()*/
+//				createTestingBorrows()
 				break;
 
 			case "production":
@@ -64,7 +64,7 @@ class BootStrap {
 		assert standardUser.addToRoles(userRole)
 		.save(flush: true, failOnError: true)
 
-		for(i in 0..17) {
+		for(i in 0..3) {
 			def jane = ShiroUser.findByUsername("knight${i}") ?:
 					new ShiroUser(username:"knight${i}",
 					passwordHash:shiroSecurityService.encodePassword('123456'))

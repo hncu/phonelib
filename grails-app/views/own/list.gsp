@@ -181,8 +181,9 @@
 				</div>
 			</div>
 		</div>
-
+<!-- 
 		<div class="span3">dfaasdf</div>
+		 -->
 	</div>
 </body>
 </html>

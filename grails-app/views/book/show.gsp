@@ -46,7 +46,7 @@
 					<span id="borrow-label" class="property-label"><g:message code="book.borrow.label" default="Borrow" /></span>
 					
 						<g:each in="${bookInstance.borrow}" var="b">
-						<span class="property-value" aria-labelledby="borrow-label"><g:link controller="borrow" action="show" id="${b.id}">${b?.encodeAsHTML()}</g:link></span>
+						<span class="property-value" aria-labelledby="borrow-label"><g:link controller="borrow" action="bgshow" id="${b.id}">${b?.encodeAsHTML()}</g:link></span>
 						</g:each>
 					
 				</li>
@@ -57,7 +57,7 @@
 					<span id="own-label" class="property-label"><g:message code="book.own.label" default="Own" /></span>
 					
 						<g:each in="${bookInstance.own}" var="o">
-						<span class="property-value" aria-labelledby="own-label"><g:link controller="own" action="show" id="${o.id}">${o?.encodeAsHTML()}</g:link></span>
+						<span class="property-value" aria-labelledby="own-label"><g:link controller="own" action="bgshow" id="${o.id}">${o?.encodeAsHTML()}</g:link></span>
 						</g:each>
 					
 				</li>

@@ -1,4 +1,5 @@
 package phonelibv2
+import groovy.json.JsonSlurper
 import org.apache.shiro.SecurityUtils
 import org.apache.shiro.authc.AuthenticationException
 import org.apache.shiro.authc.UsernamePasswordToken
@@ -115,10 +116,21 @@ class AuthController {
 			
 			def user = ShiroUser.findByUsername(params.username)
 			def ownInstance = user.own
+//			println ownInstance
+//			println ownInstance.book.isbn13
+//			println ownInstance.book.isbn13
+//			for(:ownInstance){
+//				
+//			}
 			//render(contentType:"text/json"){ rend(signIn:"Y",ownInstance:ownInstance.isbn13)}
+//			def builder = new groovy.json.JsonBuilder();
 			
-			render(contentType: "text/json") {
-				ownInstance = ownInstance.book
+			render(contentType: "text/json") { 
+//				ownInstance = ownInstance.book
+				ownInstance.book.isbn13
+		
+//				def result = new JsonSlurper().parseText(ownInstance.toString()) 
+				
 			}
 		}
 		catch (AuthenticationException ex){

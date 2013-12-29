@@ -36,7 +36,7 @@
 				<li class="fieldcontain">
 					<span id="borrower-label" class="property-label"><g:message code="borrow.borrower.label" default="Borrower" /></span>
 					
-						<span class="property-value" aria-labelledby="borrower-label"><g:link controller="shiroUser" action="show" id="${borrowInstance?.borrower?.id}">${borrowInstance?.borrower?.encodeAsHTML()}</g:link></span>
+						<span class="property-value" aria-labelledby="borrower-label"><g:link controller="shiroUser" action="bgshow" id="${borrowInstance?.borrower?.id}">${borrowInstance?.borrower?.encodeAsHTML()}</g:link></span>
 					
 				</li>
 				</g:if>
@@ -54,7 +54,7 @@
 				<li class="fieldcontain">
 					<span id="owner-label" class="property-label"><g:message code="borrow.owner.label" default="Owner" /></span>
 					
-						<span class="property-value" aria-labelledby="owner-label"><g:link controller="shiroUser" action="show" id="${borrowInstance?.owner?.id}">${borrowInstance?.owner?.encodeAsHTML()}</g:link></span>
+						<span class="property-value" aria-labelledby="owner-label"><g:link controller="shiroUser" action="bgshow" id="${borrowInstance?.owner?.id}">${borrowInstance?.owner?.encodeAsHTML()}</g:link></span>
 					
 				</li>
 				</g:if>

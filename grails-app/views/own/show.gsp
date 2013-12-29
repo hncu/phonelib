@@ -45,7 +45,7 @@
 				<li class="fieldcontain">
 					<span id="user-label" class="property-label"><g:message code="own.user.label" default="User" /></span>
 					
-						<span class="property-value" aria-labelledby="user-label"><g:link controller="shiroUser" action="show" id="${ownInstance?.user?.id}">${ownInstance?.user?.encodeAsHTML()}</g:link></span>
+						<span class="property-value" aria-labelledby="user-label"><g:link controller="shiroUser" action="bgshow" id="${ownInstance?.user?.id}">${ownInstance?.user?.encodeAsHTML()}</g:link></span>
 					
 				</li>
 				</g:if>

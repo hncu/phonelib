@@ -68,7 +68,7 @@
           <span class="badge badge-info msg_num hide">32</span></a></li>
 		<li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" href="#"><shiro:principal /><b class="caret"></b> </a>
 		<ul class="dropdown-menu">
-		<li > <a href="#"> <i class="icon-cog"></i> 个人设置 </a> </li>
+		<li > <a href="/phonelibV2/signup/accout"> <i class="icon-cog"></i> 个人设置 </a> </li>
 		
 		
 		<li class="divider">&nbsp;</li>
@@ -83,7 +83,7 @@
 				<shiro:isNotLoggedIn>              
 						
 						<ul class="nav pull-right">
-                    <li><a href="/phonelibV2/signup/index">注册</a></li>
+                    <li><a href="/phonelibV2/signup">注册</a></li>
           <li class="divider-vertical"></li>
           <li class="dropdown"> <a class="dropdown-toggle" href="http://www.ycpai.com/index/login" data-toggle="dropdown">登录 <strong class="caret"></strong></a>
             <div class="dropdown-menu" style="padding: 15px; padding-bottom: 0px;">
@@ -114,8 +114,12 @@
 				<div class="row-fluid" >
 					<div class="span10"><g:layoutBody/></div>
 					<div id="span2" class="span2">
+					<shiro:isLoggedIn>
 						<div class="well sidebar-nav" >
-						<img src="http://qzapp.qlogo.cn/qzapp/100244977/1226620E54A1A23F74C223330CB9562A/100"/>
+						<!-- 
+						 <g:img dir="images" file="touxiang/5/0/1385365529295_162.jpg"/>
+						 -->
+					<g:link controller="signup" action="tx"><img src="${resource(dir: 'images', file: "${shiroUserInstance}")}"> </g:link>
 						<shiro:principal />
 						<br/>
 						益阳 赫山区 
@@ -137,6 +141,7 @@
 						<a href="#"><img src="http://shaishufang.com/assets/flowerkai.png"/></a>
 						
 						</div>
+						</shiro:isLoggedIn>
 					</div>
 				</div>
 				

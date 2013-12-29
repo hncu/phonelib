@@ -45,7 +45,7 @@
 				<li class="fieldcontain">
 					<span id="recipient-label" class="property-label"><g:message code="internalMessage.recipient.label" default="Recipient" /></span>
 					
-						<span class="property-value" aria-labelledby="recipient-label"><g:link controller="shiroUser" action="show" id="${internalMessageInstance?.recipient?.id}">${internalMessageInstance?.recipient?.encodeAsHTML()}</g:link></span>
+						<span class="property-value" aria-labelledby="recipient-label"><g:link controller="shiroUser" action="bgshow" id="${internalMessageInstance?.recipient?.id}">${internalMessageInstance?.recipient?.encodeAsHTML()}</g:link></span>
 					
 				</li>
 				</g:if>
@@ -54,7 +54,7 @@
 				<li class="fieldcontain">
 					<span id="sender-label" class="property-label"><g:message code="internalMessage.sender.label" default="Sender" /></span>
 					
-						<span class="property-value" aria-labelledby="sender-label"><g:link controller="shiroUser" action="show" id="${internalMessageInstance?.sender?.id}">${internalMessageInstance?.sender?.encodeAsHTML()}</g:link></span>
+						<span class="property-value" aria-labelledby="sender-label"><g:link controller="shiroUser" action="bgshow" id="${internalMessageInstance?.sender?.id}">${internalMessageInstance?.sender?.encodeAsHTML()}</g:link></span>
 					
 				</li>
 				</g:if>

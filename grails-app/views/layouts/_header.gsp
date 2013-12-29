@@ -42,7 +42,7 @@
           <span class="badge badge-info msg_num hide"></span></a></li>
 		<li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" href="#"><shiro:principal /><b class="caret"></b> </a>
 		<ul class="dropdown-menu">
-		<li > <a href="#"> <i class="icon-cog"></i> 个人设置 </a> </li>
+		<li > <a href="/phonelibV2/signup/accout/1"> <i class="icon-cog"></i> 个人设置 </a> </li>
 		
 		
 		<li class="divider">&nbsp;</li>

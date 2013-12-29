@@ -57,12 +57,26 @@
 		<div class="span9">
 
 			<div>
-				<g:link action="create">创建新书</g:link>
-				<g:form class="form-search" action="search">
-					<g:textField name="bookName" />
-					<g:submitButton type="submit" name="搜索" class="btn" />
-				</g:form>
+		
+	<shiro:hasRole name="ROLE_ADMIN">
+				<g:link url="/phonelibV2/bgindex.gsp">管理员入口</g:link><br/>
+	</shiro:hasRole>
 
+			
+ 
+			搜索你想要的书
+				
+				<g:form class="form-search" action="search">
+				<!-- 
+					<g:textField name="bookName" value="书名、ISBN"/>
+					<g:submitButton type="submit" name="搜索" class="btn" />
+				 -->
+				<div class="input-group input-group-lg">
+ 				 
+  			<input type="text" name="bookName"  class="form-control" placeholder="书名、ISBN">
+  			<g:submitButton type="submit" name="搜索" class="btn" />
+				</div>
+				</g:form>
 				<!-- book list -->
 				<h1>图书列表</h1>
 

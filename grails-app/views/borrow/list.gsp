@@ -10,12 +10,6 @@
 	</head>
 	<body>
 	
-	
-	
-	
-	
-	
-	
 	<div id="list-own" class="content scaffold-list" role="main">
 			
 			<g:if test="${flash.message}">
