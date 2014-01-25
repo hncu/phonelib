@@ -2,7 +2,10 @@ package phonelibv2
 
 import org.springframework.dao.DataIntegrityViolationException
 import org.apache.shiro.SecurityUtils
+import org.codehaus.groovy.grails.web.json.JSONArray;
+import org.codehaus.groovy.grails.web.json.JSONObject
 import org.hibernate.FetchMode;
+
 
 class BorrowController {
 
@@ -112,17 +115,59 @@ class BorrowController {
 			def username=session.getAttribute("org.apache.shiro.subject.support.DefaultSubjectContext_PRINCIPALS_SESSION_KEY")
 			//	println(username)
 			def shiroUserInstance = ShiroUser.findByUsername("${username}");
+			if(!shiroUserInstance.btouxiang){//娌℃湁澶村儚,鏄剧ず榛樿澶村儚
+				def touxiangUrl = "touxiang/default_avatar.jpg"
+			}
+			
+			def tSize = "btouxiang" //btouxiang 澶�62x162锛宮touxiang涓�8x48锛宻touxiang灏�0x20
+			def tIndex = shiroUserInstance."${tSize}".indexOf("touxiang") //44,绗竴娆″彂鐜皌ouxiang鐨勫湴鏂�
+			def touxiang =  shiroUserInstance."${tSize}".substring(tIndex)//touxiang\10\10\1385360315740_162.jpg
+			def touxiangUrl = touxiang.replace('\\', '/');            //touxiang/10/10/1385360315740_162.jpg
+		
+			params.max = Math.min(params.max ? params.int('max') : 15, 100)
+			
+			
 			params.max = Math.min(params.max ? params.int('max') : 10, 100)
-			def borrowInstance = shiroUserInstance.borrower
-			render(view: "list", model:[borrowInstanceList: borrowInstance, categoryInstanceList: (borrowInstance.book).category,borrowInstanceTotal: Borrow.count()])
+			def search = {
+				eq('borrowStatus',4)
+				borrower{
+					eq('username',shiroUserInstance.username)
+				}
+				
+			}
+			def c = Borrow.createCriteria()
+			def borrowInstanceList = c.list(params,search)
+			def count = borrowInstanceList.totalCount
+			render(view: "list", model:[borrowInstanceList: borrowInstanceList, categoryInstanceList: (borrowInstanceList.book).category,borrowInstanceTotal: count,shiroUserInstance:touxiangUrl])
 		}
 		def ownerlist() {
 			def username=session.getAttribute("org.apache.shiro.subject.support.DefaultSubjectContext_PRINCIPALS_SESSION_KEY")
 			//	println(username)
 			def shiroUserInstance = ShiroUser.findByUsername("${username}");
+			
+			if(!shiroUserInstance.btouxiang){//娌℃湁澶村儚,鏄剧ず榛樿澶村儚
+				def touxiangUrl = "touxiang/default_avatar.jpg"
+			}
+			
+			def tSize = "btouxiang" //btouxiang 澶�62x162锛宮touxiang涓�8x48锛宻touxiang灏�0x20
+			def tIndex = shiroUserInstance."${tSize}".indexOf("touxiang") //44,绗竴娆″彂鐜皌ouxiang鐨勫湴鏂�
+			def touxiang =  shiroUserInstance."${tSize}".substring(tIndex)//touxiang\10\10\1385360315740_162.jpg
+			def touxiangUrl = touxiang.replace('\\', '/');            //touxiang/10/10/1385360315740_162.jpg
+			
+			
+			
 			params.max = Math.min(params.max ? params.int('max') : 10, 100)
-			def borrowInstance = shiroUserInstance.owner
-			render(view: "list", model:[borrowInstanceList: borrowInstance, categoryInstanceList: (borrowInstance.book).category,borrowInstanceTotal: Borrow.count()])
+			def search = {
+				eq('borrowStatus',4)
+				owner{
+					eq('username',shiroUserInstance.username)
+				}
+				
+			}
+			def c = Borrow.createCriteria()
+			def borrowInstanceList = c.list(params,search)
+			def count = borrowInstanceList.totalCount
+			render(view: "list", model:[borrowInstanceList: borrowInstanceList, categoryInstanceList: (borrowInstanceList.book).category,borrowInstanceTotal: count,shiroUserInstance:touxiangUrl])
 		}
 	
 		def create() {
@@ -223,10 +268,123 @@ class BorrowController {
 			def book = Book.get(params.bookId)
 			def owner = ShiroUser.get(params.userId)
 			def borrower = ShiroUser.findByUsername(principal)
+			if(owner==borrower){
+				flash.message = message(code: 'borrow.create.error.label', args: [message(code: 'borrow.label', default: 'Borrow'), params.id])
+				redirect(controller:"book",action:"list")
+				return
+			}
+			def ownerAck = false
+			def borrowerAck = false
+			def borrowStatus = 2
 			def now =new Date()
-			def borrow = new Borrow(book:book,owner:owner,borrower:borrower,dateCreated:now)
-			borrow.save()
-			redirect(action: "borrowerlist")
+			def dateBack = new Date()+60;
+			def borrowInstance = new Borrow(book:book,owner:owner,borrower:borrower,ownerAck:ownerAck,borrowerAck:borrowerAck,borrowStatus:borrowStatus,dateCreated:now,dateBack:dateBack)
+			borrowInstance.setOwnerAck(false)
+			borrowInstance.setBorrowerAck(false)
+			if (!borrowInstance.save(flush: true)) {
+				render(view: "create", model: [borrowInstance: borrowInstance])
+				return
+				print("oneasdfasdf")
+			}
+			flash.message = message(code: 'default.created.message', args: [message(code: 'borrow.label', default: 'Borrow'), borrowInstance.id])
+			redirect(controller:"internalMessage",action: "borrowBookMessage",id:borrowInstance.id)
+		}
+		
+		//phone 端
+		def check(){
+			def bookName = params.bookname
+			def books
+			def state
+			if(bookName.length()==13&&bookName=~'\\d'){
+				books = Book.findAllByIsbn13Like("%${bookName}%")
+			}else{
+				books = Book.findAllByTitleLike("%${bookName}%")
+			}
+			if(books.empty){
+				state = 0
+				render(contentType:"text/json"){ Book(state:state)}
+				return
+			}
+			
+			def principal = SecurityUtils.subject?.principal
+			def userInstance=ShiroUser.findByUsername(principal)
+			def search = {
+				borrower{
+					eq('username',userInstance.username)
+				}
+				book{
+					if(bookName.length()==13&&bookName=~'\\d'){
+						like('isbn13',"%${bookName}%")
+					}else{
+						like('title',"%${bookName}%")
+					}
+				}
+			}
+			def c = Borrow.createCriteria()
+			def borrowInstance = c.list (search)
+			if(!borrowInstance.empty){
+				state = 1
+			}else{
+				state = 2
+			}
+			render(contentType:"text/json"){ Book(state:state)}
+		}
+		
+		def phoneborrow(){
+			print(params)
+			JSONObject json = new JSONObject(params)
+			//JSONArray jsonArray= new JSONArray((json.books).data)
+		//	print(json)
+			
+			
+			
+			def principal = SecurityUtils.subject?.principal
+			def book = Book.get(params.bookId)
+			def owner = ShiroUser.get(params.userId)
+			def borrower = ShiroUser.findByUsername(principal)
+			def ownerAck = false
+			def borrowerAck = false
+			def borrowStatus = 4 //2未处理 1同意借 0 不同意借3正在交易4已借阅5已退还
+			def now =new Date()
+			def dateBack = new Date()+60
+			def borrowInstance = new Borrow(book:book,owner:owner,borrower:borrower,ownerAck:ownerAck,borrowerAck:borrowerAck,borrowStatus:borrowStatus,dateCreated:now,dateBack:dateBack)
+			borrowInstance.setOwnerAck(false)
+			borrowInstance.setBorrowerAck(false)
+			if (!borrowInstance.save(flush: true)) {
+				render(contentType:"text/json"){ create(state:false)}
+				return
+			}
+			flash.message = message(code: 'default.created.message', args: [message(code: 'borrow.label', default: 'Borrow'), borrowInstance.id])
+			render(contentType:"text/json"){ creat(state:true)}
+		}
+		
+		def phonebooklist(){
+			
+			def username=session.getAttribute("org.apache.shiro.subject.support.DefaultSubjectContext_PRINCIPALS_SESSION_KEY")
+			def shiroUserInstance = ShiroUser.findByUsername("${username}");
+			params.max = Math.min(params.max ? params.int('max') : 10, 100)
+			def search = {
+				eq('borrowStatus',4)
+				borrower{
+					eq('username',shiroUserInstance.username)
+				}
+				
+			}
+			def c = Borrow.createCriteria()
+			def borrowInstanceList = c.list(params,search)
+			JSONObject requestJsonObject = new JSONObject()
+			def resquestArray = []
+			
+			borrowInstanceList.each{
+				def dateCreated = it.dateCreated
+				dateCreated = dateCreated?.format("yyyy-MM-dd")
+				def dateBack = it.dateBack
+				dateBack = dateBack?.format("yyyy-MM-dd")
+				resquestArray.add('id':it.id,'isbn':"${it?.book?.isbn13}",title:"${it?.book?.title}",dateCreated:dateCreated,dateBack:dateBack)
+			}
+			requestJsonObject.put('borrowCount',borrowInstanceList.totalCount)
+			requestJsonObject.putOpt('book', resquestArray)
+			render(contentType:"text/json"){ borrowList(requestJsonObject)}
 		}
 	}
 	

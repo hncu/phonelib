@@ -46,7 +46,6 @@
 						<ul class="nav nav-tabs">
 							<li><a href="/phonelibV2/signup/accout/1">基本资料</a></li>
 							<li class="active"><g:link url="#">我的头像</g:link></li>
-							<li><a href="/phonelibV2/signup/accout/3">我的地图</a></li>
 							<li class="divider"><hr></li>
 							<li><a href="/phonelibV2/signup/accout/4">修改密码</a></li>
 							<li><a href="/phonelibV2/signup/accout/5">登陆绑定</a></li>

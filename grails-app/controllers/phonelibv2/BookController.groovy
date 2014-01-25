@@ -1,8 +1,12 @@
 package phonelibv2
 
+import groovy.json.JsonBuilder;
+
 import org.springframework.dao.DataIntegrityViolationException
 import org.apache.shiro.SecurityUtils
+import org.codehaus.groovy.grails.web.json.JSONArray;
 import org.codehaus.groovy.grails.web.json.JSONObject
+import org.hibernate.type.LongType;
 
 class BookController {
 
@@ -135,27 +139,43 @@ class BookController {
 	}
 
 	def list() {
-		
-		def principal = SecurityUtils.subject?.principal
-		if(!principal){//娌＄櫥闄嗕笉鏄剧ず涓汉淇℃伅
-			return [bookInstanceList: Book.list(params),categoryInstanceList: Category.list(), bookInstanceTotal: Book.count()]
+		print(params)
+		def categoryInstance = Category.get(params.id)
+		params.max = Math.min(params.max ? params.int('max') : 15, 100)
+		def searchBookByCategory = {
+			if(categoryInstance){
+				category{
+					eq('cname',categoryInstance.cname)
+				}
+			}
 			
 		}
+		def c = Book.createCriteria()
+		def bookList = c.list(params,searchBookByCategory)
+	//	render(view:"list",model:[categoryInstanceList: Category.list(),bookInstanceTotal: bookList.totalCount,bookInstanceList:bookList])
+	//	params.max = Math.min(params.max ? params.int('max') : 15, 100)
+		def principal = SecurityUtils.subject?.principal
+		if(!principal){//娌＄櫥闄嗕笉鏄剧ず涓汉淇℃伅
+			print("1")
+			return [bookInstanceList: bookList,categoryInstanceList: Category.list(), bookInstanceTotal: bookList.totalCount]
+		}
+		print("2")
 		def user=ShiroUser.findByUsername(principal)
 		if(!user.btouxiang){//娌℃湁澶村儚,鏄剧ず榛樿澶村儚
 			def touxiangUrl = "touxiang/default_avatar.jpg"
-			return [bookInstanceList: Book.list(params),categoryInstanceList: Category.list(), bookInstanceTotal: Book.count(),shiroUserInstance:touxiangUrl]
+			print("3")
+			return [bookInstanceList: bookList,categoryInstanceList: Category.list(), bookInstanceTotal: bookList.totalCount,shiroUserInstance:touxiangUrl]
 		}
 		
 		def tSize = "btouxiang" //btouxiang 澶�62x162锛宮touxiang涓�8x48锛宻touxiang灏�0x20
-		
+		print("4")
 //		println user.${tSize}  //D:\workspace-ggts\phonelibV2\web-app\images\touxiang\10\10\1385360315740_162.jpg
 		
 		def tIndex = user."${tSize}".indexOf("touxiang") //44,绗竴娆″彂鐜皌ouxiang鐨勫湴鏂�
 		def touxiang =  user."${tSize}".substring(tIndex)//touxiang\10\10\1385360315740_162.jpg  
 		def touxiangUrl = touxiang.replace('\\', '/');            //touxiang/10/10/1385360315740_162.jpg
-		params.max = Math.min(params.max ? params.int('max') : 20, 100)
-		[bookInstanceList: Book.list(params),categoryInstanceList: Category.list(), bookInstanceTotal: Book.count(),shiroUserInstance:touxiangUrl]
+		
+		[bookInstanceList: bookList,categoryInstanceList: Category.list(), bookInstanceTotal: bookList.totalCount,shiroUserInstance:touxiangUrl]
 	}
 
 	def create() {
@@ -216,6 +236,7 @@ class BookController {
 	}
 
 	def update() {
+		
 		def bookInstance = Book.get(params.id)
 		if (!bookInstance) {
 			flash.message = message(code: 'default.not.found.message', args: [
@@ -280,7 +301,7 @@ class BookController {
 		}
 	}
 
-	def search(){
+	def search(){ //web
 		def bookName = params.bookName
 		def books
 		def bookCount
@@ -289,10 +310,6 @@ class BookController {
 		}else{
 			books = Book.findAllByTitleLike("%${bookName}%")
 		}
-		//def len = books.count()
-		//println(len)
-
-
 		render(view:"list",model:[bookInstanceList:books,bookInstanceTotal: Book.count(), categoryInstanceList: Category.list(params)])
 	}
 
@@ -307,38 +324,6 @@ class BookController {
 
 	}
 
-	def category(){
-		def categoryInstance = Category.get(params.id)
-		if (!categoryInstance) {
-			flash.message = message(code: 'default.not.found.message', args: [
-				message(code: 'category.label', default: 'Category'),
-				params.id
-			])
-			redirect(action: "list")
-			return
-		}
-		render(view:"list",model:[categoryInstanceList: Category.list(params),bookInstanceTotal: Book.count(),bookInstanceList:categoryInstance.books])
-	}
-
-
-	def phoneSearch(){
-		def bookName = params.bookName
-		def books
-		def ren
-		if(bookName.length()==13&&bookName=~'\\d'){
-			books = Book.findAllByIsbn13Like("%${bookName}%")
-		}else{
-			books = Book.findAllByTitleLike("%${bookName}%")
-		}
-		if(books.empty){
-			ren="false"
-		}else{
-			ren="true"
-			println(books[[]])
-		}
-		render(contentType:"text/json"){ book(YN:ren)}
-	}
-	
 	def phoneBookList(){
 		params.max = Math.min(params.max ? params.int('max') : 15, 100)
 		def bookInstanceList = Book.list(params)
@@ -352,6 +337,74 @@ class BookController {
 		render(contentType:"text/json"){
 			resquestBooklist
 		}
+	}
+	
+	def updateBook(){
+		params.offset = 5587
+		params.max = Math.min(params.max ? params.int('max') : 1000, 1000)
+		Book.list(params).each {
+			JSONObject json= getbooksummy("${it.isbn13}")
+			if(json){
+				String author = json.author
+				String pubdate = json.pubdate
+				String imageUrl = json.images.medium
+				String title = json.title
+				String publisher = json.publisher
+				String summary = json.summary
+			//	print(summary)
+				params.author = author
+				params.pubdate = pubdate
+				params.imageUrl = imageUrl
+				params.title = title
+				params.publisher = publisher
+				params.summary = summary
+			//	print(params)
+				def bookInstance = Book.get(it.id)
+				print(bookInstance)
+				bookInstance.properties = params
+				if (!bookInstance.save(flush: true)) {
+					render(view: "edit", model: [bookInstance: bookInstance])
+					return
+				}
+			}
+		}
+	}
+	
+	def getbooksummy(String isbn){
+		StringBuffer html = new StringBuffer();
+		String result = null;
+		try {
+			URL url = new URL("https://api.douban.com/v2/book/isbn/"+isbn+"?alt=xd&callback=?");
+			URLConnection conn = url.openConnection();
+			conn.setRequestProperty(
+					"User-Agent",
+					"Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 5.1; GTB5; .NET CLR 2.0.50727; CIBA)");
+			BufferedInputStream ins = new BufferedInputStream(conn.getInputStream());
+			try {
+				String inputLine;
+				byte[] buf = new byte[4096];
+				int bytesRead = 0;
+				while (bytesRead >= 0) {
+					inputLine = new String(buf, 0, bytesRead, "utf-8");
+					html.append(inputLine);
+					bytesRead = ins.read(buf);
+					inputLine = null;
+				}
+				buf = null;
+			} finally {
+				//ins.close();
+				conn = null;
+				url = null;
+			}
+			result = new String(html.toString().trim().getBytes("utf-8"),
+					"utf-8").toLowerCase();
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
+		html = null;
+		JSONObject json= new JSONObject(result)
+		return json;
 	}
 
 }

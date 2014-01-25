@@ -1,4 +1,4 @@
-<%@ page contentType="text/html;charset=gb2312" language="java"%> 
+<%--<!-- <%@ page contentType="text/html;charset=gb2312" language="java"%> 
 <%@ page import="java.io.*"%> 
 
 <%  try{   
@@ -26,7 +26,7 @@ in.close();                   //关闭输入流和文件输出流
  while(second<=2){    
  secondLine=random.readLine();//读入临时文件名    
  second++;   
- }   
+ } 
  int position=secondLine.lastIndexOf('\\');   
  String filename=new String((secondLine.substring(position+1,secondLine.length()-1)).getBytes("iso-8859-1"),   "gb2312");//去掉临时文件名中的sessionId，获得文件名，并用iso-8859-1编码， 避免出现中文乱码问题 
  random.seek(0);   
@@ -70,4 +70,4 @@ in.close();                   //关闭输入流和文件输出流
       out.println("上传文件失败！");  
   } 
   %>
- 
+ -->--%>

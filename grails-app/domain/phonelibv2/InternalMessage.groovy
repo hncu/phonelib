@@ -8,4 +8,8 @@ class InternalMessage {
 	ShiroUser sender
 	ShiroUser recipient
 	Date dateCreated
+	Borrow borrow
+	static constraints = {
+		borrow(nullable:true,blank:true)
+	}
 }

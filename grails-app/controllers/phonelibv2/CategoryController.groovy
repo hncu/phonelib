@@ -202,8 +202,12 @@ class CategoryController {
 		}
 		
 		def phoneOwnCategoryList(){
+			print(session.id)
+			print(params)
 			def principal = SecurityUtils.subject?.principal
+			print(principal)
 			def user = ShiroUser.findByUsername(principal)
+			//print(session.+"************************"+user)
 			
 			def bookInstance = user.own.book
 			List categoryList = bookInstance.category

@@ -32,7 +32,7 @@ body {
 
 
 </head>
-<body onload="YearMonthDay()">
+<body>
 
 
 	<div class="navbar navbar-fixed-top">

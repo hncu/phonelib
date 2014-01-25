@@ -89,7 +89,7 @@ class AuthController {
 	
 	def phoneSignIn = {
 		def authToken = new UsernamePasswordToken(params.username, params.password as String)
-
+		print(params)
 		// Support for "remember me"
 		if (params.rememberMe) {
 			authToken.rememberMe = true
@@ -105,38 +105,41 @@ class AuthController {
 			targetUri = savedRequest.requestURI - request.contextPath
 			if (savedRequest.queryString) targetUri = targetUri + '?' + savedRequest.queryString
 		}
-		
-		try{
-			// Perform the actual login. An AuthenticationException
-			// will be thrown if the username is unrecognised or the
-			// password is incorrect.
-			SecurityUtils.subject.login(authToken)
-			//log.info "Redirecting to '${targetUri}'."
-			
-			//render(contentType:"text/json"){ rend(signIn:"Y",ownInstance:ownInstance.isbn13)}
-			
-			render(contentType:"text/json"){ rend(signIn:"Y")}
-		}
-		catch (AuthenticationException ex){
-			// Authentication failed, so display the appropriate message
-			// on the login page.
-			log.info "Authentication failure for user '${params.username}'."
-			flash.message = message(code: "login.failed")
-
-			// Keep the username and "remember me" setting so that the
-			// user doesn't have to enter them again.
-			def m = [ username: params.username ]
-			if (params.rememberMe) {
-				m["rememberMe"] = true
-			}
-
-			// Remember the target URI too.
-			if (params.targetUri) {
-				m["targetUri"] = params.targetUri
-			}
+		print(""+session.isNew()+session.id)
+		if(session.isNew()){
+			try{
+				// Perform the actual login. An AuthenticationException
+				// will be thrown if the username is unrecognised or the
+				// password is incorrect.
+				SecurityUtils.subject.login(authToken)
+				//log.info "Redirecting to '${targetUri}'."
+				//render(contentType:"text/json"){ rend(signIn:"Y",ownInstance:ownInstance.isbn13)}
 				
-			// Now redirect back to the login page.
-			render(contentType:"text/json"){ rend(signIn:"N")}
+				render(contentType:"text/json"){ rend(signIn:"Y")}
+			}
+			catch (AuthenticationException ex){
+				// Authentication failed, so display the appropriate message
+				// on the login page.
+				log.info "Authentication failure for user '${params.username}'."
+				flash.message = message(code: "login.failed")
+				
+				// Keep the username and "remember me" setting so that the
+				// user doesn't have to enter them again.
+				def m = [ username: params.username ]
+				if (params.rememberMe) {
+					m["rememberMe"] = true
+				}
+	
+				// Remember the target URI too.
+				if (params.targetUri) {
+					m["targetUri"] = params.targetUri
+				}
+					
+				// Now redirect back to the login page.
+				render(contentType:"text/json"){ rend(signIn:"N")}
+			}
+		}else{
+			render(contentType:"text/json"){ rend(signIn:"Y")}
 		}
 	}
 	

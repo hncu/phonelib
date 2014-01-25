@@ -104,7 +104,7 @@
 		      		      与书友分享你的书籍
 		          </h1>
 		          <br>
-		          
+		         
 		       	  <p>还没有账号?现在加入 <a href="/phonelibV2/signup/index" class="btn btn-primary btn-large">立即注册</a></p>
 		        </div>
 		      <hr>

@@ -2,8 +2,13 @@ package phonelibv2
 
 import org.springframework.dao.DataIntegrityViolationException
 import org.apache.shiro.SecurityUtils
-import java.util.Iterator
 
+import java.util.Iterator
+/**
+ * 用户拥有图书类
+ * @author Administrator
+ *
+ */
 class OwnController {
 
     static allowedMethods = [save: "POST", update: "POST", delete: "POST"]
@@ -104,34 +109,49 @@ class OwnController {
     }
 	
 	
-		def index() {
-			redirect(action: "list", params: params)
-		}
+	def index() {
+		redirect(action: "list", params: params)
+	}
 	
-		def list() {
-			params.max = Math.min(params.max ? params.int('max') : 15, 100)	
+	def list() {
 		def principal = SecurityUtils.subject?.principal
 		def userInstance=ShiroUser.findByUsername(principal)
+		if(!userInstance.btouxiang){//娌℃湁澶村儚,鏄剧ず榛樿澶村儚
+			def touxiangUrl = "touxiang/default_avatar.jpg"
+                                                                                                                                		}
+		
+		def tSize = "btouxiang" //btouxiang 澶�62x162锛宮touxiang涓�8x48锛宻touxiang灏�0x20
+		def tIndex = userInstance."${tSize}".indexOf("touxiang") //44,绗竴娆″彂鐜皌ouxiang鐨勫湴鏂�
+		def touxiang =  userInstance."${tSize}".substring(tIndex)//touxiang\10\10\1385360315740_162.jpg
+		def touxiangUrl = touxiang.replace('\\', '/');            //touxiang/10/10/1385360315740_162.jpg
+	
+		params.max = Math.min(params.max ? params.int('max') : 15, 100)	
+		
 		def ownInstance = userInstance.own
 		List categoryList = (ownInstance.book).category
 		categoryList.unique()
-		
+		def categoryInstance = Category.get(params.id)
 		def searchOwnList = {
+			if(categoryInstance)
+			book{
+				category{
+					eq('cname',categoryInstance.cname)
+				}
+			}
+			
 			user{
 				eq('username',userInstance.username)
+				
 			}
 		}
 		def c = Own.createCriteria()
 		def ownList = c.list(params,searchOwnList)
 		def ownCount = ownList.totalCount
-		[ownInstanceList: ownList, ownInstanceTotal: ownCount,categoryInstanceList: categoryList]
+		[ownInstanceList: ownList, ownInstanceTotal: ownCount,categoryInstanceList: categoryList,shiroUserInstance:touxiangUrl]
 		
-		/*def ownInstance = userInstance.own
-		List categoryList = (ownInstance.book).category
-		categoryList.unique()
-		[ownInstanceList: ownInstance, ownInstanceTotal: ownInstance.size(),categoryInstanceList: categoryList]*/
+
 		}
-	
+		
 		def create() {
 			[ownInstance: new Own(params)]
 		}
@@ -153,7 +173,6 @@ class OwnController {
 			}
 		
 			def principal = SecurityUtils.subject?.principal
-			
 			def user=ShiroUser.findByUsername(principal)
 			def now =new Date()
 			def own =new Own(book:book,user:user,dateCreated:now)
@@ -245,41 +264,50 @@ class OwnController {
 				redirect(action: "show", id: params.id)
 			}
 		}
+		// phone 
 		
-		def category(){
-			
-			def categoryInstance = Category.get(params.id)
-			def bookList = categoryInstance.getBooks()
-			def ownList =  bookList.own
-		//	print ownList.getClass().getName()
-			def ownSet =ownList.toSet()
-	
-			List oList = new ArrayList()
-			for(def i = 0;i < ownList.size(); i++){
-				if(ownList[i]){
-		//			println ownList[i].id[0]
-					def own = Own.get(ownList[i].id[0])
-		//			println own
-		//			def own = ownList[i]
-					oList.add(own)
-				
-				}
-		}
 		
-					def principal = SecurityUtils.subject?.principal
-					def user=ShiroUser.findByUsername(principal)
-					def ownInstance = user.own
-	
-			if (!categoryInstance) {
-				flash.message = message(code: 'default.not.found.message', args: [message(code: 'category.label', default: 'Category'), params.id])
-				redirect(action: "list")
-				return
+		
+		def ownbooklist(){
+			def principal = SecurityUtils.subject?.principal
+			def userInstance=ShiroUser.findByUsername(principal)
+			/*if(!userInstance.btouxiang){//娌℃湁澶村儚,鏄剧ず榛樿澶村儚
+				def touxiangUrl = "touxiang/default_avatar.jpg"
+				return [bookInstanceList: Book.list(params),categoryInstanceList: Category.list(), bookInstanceTotal: Book.count(),shiroUserInstance:touxiangUrl]
 			}
-			def OwnList = (ownInstance.book).category
-			HashSet h  = new HashSet(OwnList);
-			OwnList.clear()
-			OwnList.addAll(h)
-			render(view:"list",model:[ownInstanceList: oList,ownInstanceTotal: Own.count(),categoryInstanceList: OwnList])
+			
+			def tSize = "btouxiang" //btouxiang 澶�62x162锛宮touxiang涓�8x48锛宻touxiang灏�0x20
+			def tIndex = userInstance."${tSize}".indexOf("touxiang") //44,绗竴娆″彂鐜皌ouxiang鐨勫湴鏂�
+			def touxiang =  userInstance."${tSize}".substring(tIndex)//touxiang\10\10\1385360315740_162.jpg
+			def touxiangUrl = touxiang.replace('\\', '/');            //touxiang/10/10/1385360315740_162.jpg
+		*/
+			params.max = Math.min(params.max ? params.int('max') : 15, 100)
+			def ownInstance = userInstance.own
+			List categoryList = (ownInstance.book).category
+			categoryList.unique()
+			def categoryInstance = Category.get(params.id)
+			def searchOwnList = {
+				if(categoryInstance)
+				book{
+					category{
+						eq('cname',categoryInstance.cname)
+					}
+				}
+				user{
+					eq('username',userInstance.username)
+					
+				}
+			}
+			def c = Own.createCriteria()
+			def ownList = c.list(params,searchOwnList)
+			def ownCount = ownList.totalCount
+			print("***************")
+			
+			render(contentType:"text/json"){
+				ownInstanceList: ownList
+				 ownInstanceTotal: ownCount
+				 categoryInstanceList: categoryList
+			}
 		}
 		
 		def phoneSave(){

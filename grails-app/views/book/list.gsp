@@ -22,31 +22,66 @@
 	margin-left: 6px;
 	margin-top: 1px;
 	text-indent: 36px;
-	width: 160px;
+	width: 140px;
+}
+.prevLink{
+padding: 2px 5px;
+border-width: 1px;
+border-style: solid;
+border-color: rgb(238, 238, 238);
+margin: 2px;
+color: rgb(3, 108, 180);
+text-decoration: none;
+}
+.currentStep{
+padding: 2px 5px;
+border-width: 1px;
+border-style: solid;
+border-color: rgb(3, 108, 180);
+font-weight: bold;
+margin: 2px;
+color: rgb(255, 255, 255);
+background-color: rgb(3, 108, 180);
+}
+.nextLink{
+padding: 2px 5px;
+border-width: 1px;
+border-style: solid;
+border-color: rgb(238, 238, 238);
+margin: 2px;
+color: rgb(3, 108, 180);
+text-decoration: none;
+}
+.step{
+padding: 2px 5px;
+border-width: 1px;
+border-style: solid;
+border-color: rgb(238, 238, 238);
+margin: 2px;
+color: rgb(3, 108, 180);
+text-decoration: none;
 }
 </style>
 </head>
 <body>
-
-
-
-
 	<div>
 		<div class="span3">
 			<ul>
 				<li class="nav-header"><h3>图书类别</h3></li>
-
 				<!-- 分类加载-->
-				<li class="categpry"><g:link url="/phonelibV2/book/list">全部</g:link>
+				<g:if test="${params.id==null }"><li class="category" style="background-image:url(/phonelibV2/images/category_action.jpg);width: 160px;"></g:if>
+				<g:else><li class="category"></g:else>
+					<g:link url="/phonelibV2/book/list">全部</g:link>
 				</li>
 				<g:each in="${categoryInstanceList}" status="i"
 					var="categoryInstance">
-					<div>
-						<li class="category"><g:link controller="book"
-								action="category" id="${categoryInstance.id}">
+					<div >
+						<g:if test="${(""+categoryInstance.id)==params.id}"><li class="category" style="background-image:url(/phonelibV2/images/category_action.jpg);width: 160px;"></g:if>
+						<g:else><li class="category"></g:else>
+							<g:link controller="book"
+								action="list" id="${categoryInstance.id}">
 								${categoryInstance.cname}
 							</g:link></li>
-
 					</div>
 				</g:each>
 			</ul>
@@ -62,47 +97,46 @@
 				<g:link url="/phonelibV2/bgindex.gsp">管理员入口</g:link><br/>
 	</shiro:hasRole>
 
-			
- 
-			搜索你想要的书
 				
 				<g:form class="form-search" action="search">
 				<!-- 
 					<g:textField name="bookName" value="书名、ISBN"/>
 					<g:submitButton type="submit" name="搜索" class="btn" />
 				 -->
-				<div class="input-group input-group-lg">
+					<div class="input-group input-group-lg">
  				 
-  			<input type="text" name="bookName"  class="form-control" placeholder="书名、ISBN">
-  			<g:submitButton type="submit" name="搜索" class="btn" />
-				</div>
+  						<input type="text" name="bookName"  class="form-control" placeholder="书名、ISBN">
+  						<g:submitButton type="submit" name="搜索" class="btn" />
+					</div>
+					
 				</g:form>
 				<!-- book list -->
-				<h1>图书列表</h1>
+				
 
 
 			</div>
 
 			<div id="list-book" class="content scaffold-list" role="main">
 				<g:if test="${flash.message}">
-					<div class="message" role="status">
+					<div class="message" role="status" style="color:red">
 						${flash.message}
 					</div>
 				</g:if>
+
 
 
 				<ul class="thumbnails">
 
 					<g:each in="${bookInstanceList}" status="i" var="bookInstance">
 
-						<li style="margin: 10px 7px 5px 7px;"><a class="thumbnail"
-							data-toggle="modal" data-target="#myModal${bookInstance.isbn13}"
+						<li style="width:130px; height:200px;margin: 10px 7px 5px 7px;"><a class="thumbnail"
+							data-toggle="modal" data-target="#myModal${bookInstance.id}"
 							href="javascript:">
-								<div id=${bookInstance.isbn13}.img></div>
-								<div class="caption" id=${bookInstance.isbn13}.title></div>
+								<div id=${bookInstance.isbn13}.img><img style="height:160px; width:120px;" src="http://img5.douban.com/mpic/s23692337.jpg"></div>
+								<div class="caption" id=${bookInstance.isbn13}.title>正在加载。。。</div>
 
 						</a>
-							<div class="modal hide fade" id="myModal${bookInstance.isbn13}"
+							<div class="modal hide fade" id="myModal${bookInstance.id}"
 								tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
 								aria-hidden="true">
 								<div class="modal-dialog">
@@ -143,9 +177,12 @@
 											<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">借书 <span class="caret"></span></button>
 										        <ul class="dropdown-menu pull-right">
 										          <li><a href="#">选择拥有者</a></li>
-										          <g:each in="${(bookInstance.own.user)}" var="userInstance">
-														<li><g:link controller="borrow" action = "borrowBookAdd" params ="[userId:userInstance.id,bookId:bookInstance.id]">${ userInstance.username}
-														</g:link></li>
+										          <g:each in="${(bookInstance.own)}" var="ownInstance">
+														<li><g:if test="${ownInstance?.bookStatus==0}" >
+																<g:link controller="borrow" action = "borrowBookAdd" params ="[userId:ownInstance.user.id,bookId:ownInstance.book.id]">${ ownInstance.user.username}
+																</g:link>
+															</g:if>
+														</li>
 												  </g:each>
 										        </ul>
 										</div>
@@ -183,9 +220,10 @@
 					</g:each>
 				</ul>
 				<!-- end booklist -->
-				<div class="pagination">
-					<g:paginate total="${bookInstanceTotal}" />
-				</div>
+				
+					<g:paginate total="${bookInstanceTotal}" params="${params}" />
+			
+
 			</div>
 		</div>
 

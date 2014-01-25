@@ -7,6 +7,58 @@
 		<g:set var="entityName" value="${message(code: 'borrow.label', default: 'Borrow')}" />
 		<title><g:message code="default.list.label" args="[entityName]" /></title>
 			<script type="text/javascript" src="/phonelibV2/js/douban_api.js"></script>
+			<style type="text/css">
+.category {
+	font-size: 14px;
+	line-height: 40px;
+	list-style-type: none;
+	background: #EEEEEE;
+	font-size: 14px;
+	height: 38px;
+	line-height: 40px;
+	margin-left: 6px;
+	margin-top: 1px;
+	text-indent: 36px;
+	width: 140px;
+}
+.prevLink{
+padding: 2px 5px;
+border-width: 1px;
+border-style: solid;
+border-color: rgb(238, 238, 238);
+margin: 2px;
+color: rgb(3, 108, 180);
+text-decoration: none;
+}
+.currentStep{
+padding: 2px 5px;
+border-width: 1px;
+border-style: solid;
+border-color: rgb(3, 108, 180);
+font-weight: bold;
+margin: 2px;
+color: rgb(255, 255, 255);
+background-color: rgb(3, 108, 180);
+}
+.nextLink{
+padding: 2px 5px;
+border-width: 1px;
+border-style: solid;
+border-color: rgb(238, 238, 238);
+margin: 2px;
+color: rgb(3, 108, 180);
+text-decoration: none;
+}
+.step{
+padding: 2px 5px;
+border-width: 1px;
+border-style: solid;
+border-color: rgb(238, 238, 238);
+margin: 2px;
+color: rgb(3, 108, 180);
+text-decoration: none;
+}
+</style>
 	</head>
 	<body>
 	
@@ -19,22 +71,25 @@
 				
 				<div>
 			<div class="span3">
-				<ul >
-        					<li class="nav-header"><h3>图书类别</h3></li>
-        					
-							<!-- 分类加载-->
-							<li class="categpry">
-							 <g:link  url="/phonelibV2/">全部</g:link>
-							 </li>
-								<g:each in="${categoryInstanceList}" status="i" var="categoryInstance">
-									<div >
-										<li class="categpry">
-											<g:link controller="book"  action="category" id="${categoryInstance.id}">${categoryInstance.cname}</g:link>
-										</li>
-										
-									</div>
-								</g:each>
-						</ul>
+				<ul>
+				<li class="nav-header"><h3>图书类别</h3></li>
+				<!-- 分类加载-->
+				<g:if test="${params.id==null }"><li class="category" style="background-image:url(/phonelibV2/images/category_action.jpg);width: 160px;"></g:if>
+				<g:else><li class="category"></g:else>
+					<g:link url="/phonelibV2/book/list">全部</g:link>
+				</li>
+				<g:each in="${categoryInstanceList}" status="i"
+					var="categoryInstance">
+					<div >
+						<g:if test="${(""+categoryInstance.id)==params.id}"><li class="category" style="background-image:url(/phonelibV2/images/category_action.jpg);width: 160px;"></g:if>
+						<g:else><li class="category"></g:else>
+							<g:link controller="book"
+								action="list" id="${categoryInstance.id}">
+								${categoryInstance.cname}
+							</g:link></li>
+					</div>
+				</g:each>
+			</ul>
 			</div>
 			
 			<!-- end book category -->
@@ -42,14 +97,13 @@
 			<div class="span9">
 			
 				<div >
-				<g:link  action="create">创建新书</g:link>  
-				<g:form class="form-search" action="search">  
-					<g:textField name="bookName"/>  <g:submitButton  type="submit" name="搜索" class="btn"/>
-				</g:form>
-				
+	
 		<!-- book list -->
-				<h1>我的图书</h1>
-			
+		<g:if test="${params.action=="ownerlist"}">
+				<span class="nav-header"><h2>借出图书</h2></span>
+			</g:if><g:else>
+				<span class="nav-header"><h2>借入图书</h2></span>
+			</g:else>
 			
 			</div>
 			
@@ -100,7 +154,9 @@
 						  </div>
 					      <div class="modal-footer">
 					        <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
-					        <button type="button" class="btn btn-primary">Save changes</button>
+					        <g:if test="${!borrowInstance?.borrowerAck} ">
+					        	<g:link controller="internalMessage" action="backAck" params="[borrowId:borrowInstance.id]">确认归还</g:link>
+					        </g:if>
 					      </div>
 					    </div><!-- /.modal-content -->
 					  </div><!-- /.modal-dialog -->
@@ -146,56 +202,11 @@
 			
 		</div>
 		
-		
-	
-	
-	
-	
-		<a href="#list-borrow" class="skip" tabindex="-1"><g:message code="default.link.skip.label" default="Skip to content&hellip;"/></a>
-		<div class="nav" role="navigation">
-			<ul>
-				<li><a class="home" href="${createLink(uri: '/')}"><g:message code="default.home.label"/></a></li>
-				<li><g:link class="create" action="create"><g:message code="default.new.label" args="[entityName]" /></g:link></li>
-			</ul>
-		</div>
-		<div id="list-borrow" class="content scaffold-list" role="main">
-			<h1><g:message code="default.list.label" args="[entityName]" /></h1>
-			<g:if test="${flash.message}">
-			<div class="message" role="status">${flash.message}</div>
-			</g:if>
-			<table>
-				<thead>
-					<tr>
-					
-						<th><g:message code="borrow.book.label" default="Book" /></th>
-					
-						<th><g:message code="borrow.borrower.label" default="Borrower" /></th>
-					
-						<g:sortableColumn property="dateCreated" title="${message(code: 'borrow.dateCreated.label', default: 'Date Created')}" />
-					
-						<th><g:message code="borrow.owner.label" default="Owner" /></th>
-					
-					</tr>
-				</thead>
-				<tbody>
-				<g:each in="${borrowInstanceList}" status="i" var="borrowInstance">
-					<tr class="${(i % 2) == 0 ? 'even' : 'odd'}">
-					
-						<td><g:link action="show" id="${borrowInstance.id}">${fieldValue(bean: borrowInstance, field: "book")}</g:link></td>
-					
-						<td>${fieldValue(bean: borrowInstance, field: "borrower")}</td>
-					
-						<td><g:formatDate date="${borrowInstance.dateCreated}" /></td>
-					
-						<td>${fieldValue(bean: borrowInstance, field: "owner")}</td>
-					
-					</tr>
-				</g:each>
-				</tbody>
-			</table>
+
+			
 			<div class="pagination">
 				<g:paginate total="${borrowInstanceTotal}" />
 			</div>
-		</div>
+		
 	</body>
 </html>

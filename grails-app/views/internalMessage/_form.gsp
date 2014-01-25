@@ -15,7 +15,7 @@
 		<g:message code="internalMessage.recipient.label" default="Recipient" />
 		<span class="required-indicator">*</span>
 	</label>
-	<g:select id="recipient" name="recipient.id" from="${phonelibv2.ShiroUser.list()}" optionKey="id" required="" value="${internalMessageInstance?.recipient?.id}" class="many-to-one"/>
+	<g:select id="sender.id" name="sender.id" from="${phonelibv2.ShiroUser.list()}" optionKey="id" optionValue="username" required="" value="${internalMessageInstance?.sender?.id}" class="many-to-one"/>
 </div>
 
 

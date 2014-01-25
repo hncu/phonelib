@@ -7,13 +7,14 @@ class ShiroUser {
 	String btouxiang
 	String mtouxiang
 	String stouxiang
-	
-	String niCheng = "无名氏"
-	String xingMing = ""
-	String sinaWeibo
+	String realname
+	String weibo
 	String qq
 	String weixin
-	String location
+	String nickname
+	String province
+	String city
+	String sex
 //	Date   birthday
 //	String weiZhi
 //	String touXiangURL
@@ -25,9 +26,12 @@ class ShiroUser {
     	username(nullable: false, blank: false, unique: true,size:3..20)
     	passwordHash(nullable: false, blank: false,size:6..70)//哈希算法后加密，长度权限没有
 		email(nullable:false,blank:false,unique:true,email: true)
+		nickname(nullable: false, blank: false, unique: true,size:3..20)
 		btouxiang(blank:true,nullable:true)
 		mtouxiang(blank:true,nullable:true)
 		stouxiang(blank:true,nullable:true)
+//		lng(blank:true,nullable:true)
+//		lat(blank:true,nullable:true)
     }
 	
 	static mappedBy=[owner:'owner',borrower:'borrower',sender:'sender',recipient:'recipient']

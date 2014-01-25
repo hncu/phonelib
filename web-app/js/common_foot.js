@@ -289,6 +289,7 @@ function get_position(){
 //验证昵称
 function check_nick(){
 	var nick = $.trim($("#nickname").val());	
+	alert("aaaaa");
 	var cans = $("#can_sub").val();
 	if(nick !=''){
 	  $.ajax({

@@ -1,5 +1,6 @@
 package phonelibv2
 
+
 import java.awt.GraphicsCallback.PrintAllCallback;
 import java.awt.Rectangle
 import java.awt.image.BufferedImage
@@ -7,14 +8,14 @@ import javax.imageio.ImageIO
 import javax.imageio.ImageReadParam
 import javax.imageio.ImageReader
 import javax.imageio.stream.ImageInputStream
-
 import org.apache.shiro.SecurityUtils
 import org.apache.shiro.authc.UsernamePasswordToken
 import sun.misc.BASE64Decoder
 
 class SignupController {
-    def shiroSecurityService
-
+	def shiroSecurityService
+	
+	def mailService
     def index() {
 //        ShiroUser user = new ShiroUser()
 //        [user: ShiroUser]
@@ -22,18 +23,13 @@ class SignupController {
     }
 
     def register() {
-//		println params.username
-//		println params.passwordHash
-//		println params.password2
-        // Check to see if the username already exists
+		
         def user = ShiroUser.findByUsername(params.username)
         if (user) {
-//			println "bbbbbbbbbbb"
             flash.message = " '${params.username}'，该用户名已经被注册"
             redirect(action:'create')
         } else { // User doesn't exist with username. Let's create one
             // Make sure the passwords match
-//		println "cccccccccccccc"
 		println params.passwordHash.length()
 		if(params.passwordHash.length()<6){
 			flash.message = "密码长度不能少于6位"
@@ -51,9 +47,18 @@ class SignupController {
                     user.addToRoles(ShiroRole.findByName('ROLE_USER'))
                     // Login user
                     def authToken = new UsernamePasswordToken(user.username, params.passwordHash)
-					println authToken
+					mailService.sendMail {
+						//to "${params.email}"
+						to '2456132330@qq.com'
+						from 'xieluhong09 <xieluhong09@126.com>'
+						subject "您已完成注册"
+						body '感谢您的使用'
+					}
+					
+			
+					
                     SecurityUtils.subject.login(authToken)
-
+					
                     redirect(controller: 'book', action: 'list')
                 }else {
 				render(view: "create", model: [shiroUserInstance: user])
@@ -68,7 +73,7 @@ class SignupController {
 			render(view: "create", model: [shiroUserInstance: shiroUserInstance])
 			return
 		}
-
+		
 		flash.message = message(code: 'default.created.message', args: [message(code: 'shiroUser.label', default: 'ShiroUser'), shiroUserInstance.id])
 		redirect(action: "show", id: shiroUserInstance.id)
 	}
@@ -78,11 +83,16 @@ class SignupController {
 
 	def accout(){
 //		print params.id
+		def principal = SecurityUtils.subject?.principal
+		def userInstance=ShiroUser.findByUsername(principal)
+//		println userInstance
+//		println userInstance.nickname
 		
-		if(params.id == null){
-			render(view: "accout/1");
+		if(params.id == null || "grzl"){
+			render(view: "accout/1",model:[userInstance:userInstance]);
 			return ;
 		}
+
 		if(params.id == "upload"||params.id.equals("upload")){
 			redirect(action:"upload")
 			return ;
@@ -92,7 +102,7 @@ class SignupController {
 			i = 1;
 		}
 		switch(i){
-			case 1:  render(view: "accout/1");  break
+			case 1:  render(view: "accout/1",model:[]);  break
 			case 2:  render(view: "2"); break
 			case 3:  render(view: "accout/3"); break
 			case 4:  render(view: "accout/4"); break
@@ -163,17 +173,85 @@ class SignupController {
 		
 			String picUrl = savepath+savePicName;
 		
-					def principal = SecurityUtils.subject?.principal
-				def user=ShiroUser.findByUsername(principal)
+		def principal = SecurityUtils.subject?.principal
+		def userInstance=ShiroUser.findByUsername(principal)
+		println userInstance.username;
+		if(userInstance){
+		println "filename162="+filename162;
+		userInstance.btouxiang = filename162
+		println "userInstance.btouxiang="+userInstance.btouxiang;
 		
-		if(user){
-		user.btouxiang = filename162
-		user.mtouxiang = filename48
-		user.stouxiang = filename20
+		userInstance.mtouxiang = filename48
+		userInstance.stouxiang = filename20
 		
+		}
+		userInstance.save(flash:true);
 		render("{\"status\":1,\"picUrl\":\""+picUrl+"\"}")//返回给客户端的js
+	}
+	
+	//个人资料修改后提交的地址
+	def grzl(){// gerenziliao-->个人资料
+		def principal = SecurityUtils.subject?.principal
+		def userInstance = ShiroUser.findByUsername(principal)
+//		println("grzl");
+		println userInstance.username;
+		println(params.realname);
+		userInstance.nickname = params.nickname;
+		userInstance.realname = params.realname;
+		userInstance.email = params.email;
+		userInstance.weibo = params.weibo;
+		userInstance.qq = params.qq;
+		userInstance.weixin = params.weixin;
+		userInstance.province = params.province_h;
+		userInstance.city = params.city_h;
+		userInstance.sex = params.sex;
+		userInstance.save(flash:true);
+		println(params.sex);
+		
+		if (!userInstance.save(flush: true)) {
+			render(view: "accout/1",model:[userInstance:userInstance]);
+			return
+		}
+		
+//		println("local"+params.province_h+" "+params.city_h)
+//		render(view: "accout/1",model:[userInstance:userInstance]);
+	}
+	
+	def uniq_nick(){//JS检验昵称,呢称必须是唯一的
+		def nickname = ShiroUser.findByNickname(params.nick);
+		if(nickname){
+			render 0;
+		}else{
+		render 1;
 		}
 	}
+	
+	def uniq_email(){
+		def email = ShiroUser.findByEmail(params.email);
+		if(email){
+			render 0;
+		}else{
+			render 1;
+		}
+	}
+	
+	//保留，以后留着做ajax
+//	def createJS(){
+//		
+//		def user = ShiroUser.findByUsername(params.username);
+//		if(user){
+//			println("用户名已存在");
+//			render 1;
+//		}else{
+//			println("对");
+//			render 0;
+//		}
+//		println(params.username);
+//		return 
+//	}
+	
+	
+
 	
 //	def photo(){ //美图秀秀开放平台
 //		try{

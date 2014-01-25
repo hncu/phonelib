@@ -1,8 +1,45 @@
 window.onload = function(){
     //初始化，第一个参数是省级select标签id，第二个参数为市级select标签id
+
     init('province', 'city');
+    var province_h = $("#province_h").val();
+    var city_h = $("#city_h").val();
+    for (var i = 0; i < where.length; i++) {
+        if (province_obj.options[i].value == province_h) {
+            $("#province option[value='" + province_h + "']").attr("selected", "selected");
+            loca3 = (where[i].locacity).split("|");
+            length = loca3.length;
+            // alert("ccc");
+
+            for ( j = 0; j < loca3.length; j++) {
+                if (loca3[j].replace(/(^\s*)|(\s*$)/g, "") != "") {
+                    with (city_obj) {
+                        length = loca3.length;
+                        options[j].text = loca3[j];
+                        options[j].value = loca3[j];
+                        // loca4=options[selectedIndex].value;
+
+                        $("#city option[value='" + city_h + "']").attr("selected", "selected");
+                    }
+                }
+            }
+
+        }
+
+    }
+    // alert($("#gender3").val());\
+    //性别回显
+if(1==$("#gender3").val()){
+   $("#gender1").attr("checked","checked"); 
+}else if(2==$("#gender3").val()){
+    $("#gender2").attr("checked","checked");
+}else{//默认性别男
+      $("#gender1").attr("checked","checked"); 
+}
+
+
 };
-var where = new Array(35);
+var where = new Array(36);
 function comefrom(loca,locacity) { this.loca = loca; this.locacity = locacity; }
 where[0]= new comefrom("请选择省份名","请选择城市名");
 where[1] = new comefrom("北京","东城|西城|崇文|宣武|朝阳|丰台|石景山|海淀|门头沟|房山|通州|顺义|昌平|大兴|平谷|怀柔|密云|延庆");
@@ -49,16 +86,17 @@ function init(province, city) {
     city_obj = document.getElementById(city);
     
     with(province_obj) {
-        length = where.length - 1;
-        for(k=1;k<where.length;k++) {
-            options[k-1].text = where[k].loca;
-            options[k-1].value = where[k].loca;
+        length = where.length ;
+       
+        for(k=1;k<=where.length;k++) {
+            options[k-1].text = where[k-1].loca;
+            options[k-1].value = where[k-1].loca;
         }
         
         options[0].selected = true;
     }
     with(city_obj) {
-        loca3 = (where[1].locacity).split("|");
+        loca3 = (where[0].locacity).split("|");
         length = loca3.length;
         for(l=0;l<length;l++) {
             options[l].text = loca3[l];
@@ -98,6 +136,7 @@ function select() {
             break;
         }
     }
-    document.getElementById("local").value=loca2+loca4;
+    document.getElementById("province_h").value=loca2;
+    document.getElementById("city_h").value=loca4;
 }
 
