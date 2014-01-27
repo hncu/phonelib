@@ -15,6 +15,11 @@ environments {
         dataSource {
             dbCreate = "update" // one of 'create', 'create-drop', 'update', 'validate', ''
             url = "jdbc:mysql://localhost:3306/phonelibV2test"
+			/*
+			 * create-drop - 当Grails运行时删除并重新建立数据库
+				create - 如果数据库不存在则创建数据库，存在则不作任何修改
+				update - 如果数据库不存在则创建数据库，存在则进行修改
+			 */
         }
     }
     test {

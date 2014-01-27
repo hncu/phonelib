@@ -121,9 +121,9 @@ class OwnController {
                                                                                                                                 		}
 		
 		def tSize = "btouxiang" //btouxiang 澶�62x162锛宮touxiang涓�8x48锛宻touxiang灏�0x20
-		def tIndex = userInstance."${tSize}".indexOf("touxiang") //44,绗竴娆″彂鐜皌ouxiang鐨勫湴鏂�
-		def touxiang =  userInstance."${tSize}".substring(tIndex)//touxiang\10\10\1385360315740_162.jpg
-		def touxiangUrl = touxiang.replace('\\', '/');            //touxiang/10/10/1385360315740_162.jpg
+		def tIndex = userInstance."${tSize}"?.indexOf("touxiang") //44,绗竴娆″彂鐜皌ouxiang鐨勫湴鏂�
+		def touxiang =  userInstance."${tSize}"?.substring(tIndex)//touxiang\10\10\1385360315740_162.jpg
+		def touxiangUrl = touxiang?.replace('\\', '/');            //touxiang/10/10/1385360315740_162.jpg
 	
 		params.max = Math.min(params.max ? params.int('max') : 15, 100)	
 		

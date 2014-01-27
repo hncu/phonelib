@@ -23,8 +23,8 @@ class SignupController {
     }
 
     def register() {
-		
-        def user = ShiroUser.findByUsername(params.username)
+		println params.username;
+		def user=ShiroUser.findByUsername(params.username)
         if (user) {
             flash.message = " '${params.username}'，该用户名已经被注册"
             redirect(action:'create')
@@ -40,9 +40,12 @@ class SignupController {
                 redirect(action:'create')
             } else { // Passwords match. Let's attempt to save the user
                 // Create user
-                user = new ShiroUser(username: params.username,passwordHash: shiroSecurityService.encodePassword(params.passwordHash),email:params.email)
-
-                if (user.save()) {
+//                user = new ShiroUser(username: params.username,passwordHash: shiroSecurityService.encodePassword(params.passwordHash),email:params.email)
+			     user = new ShiroUser();
+				user.username = params.username
+				user.passwordHash = shiroSecurityService.encodePassword(params.passwordHash)
+				user.email = params.email
+                if (user.save(flush:true)) {
                     // Add USER role to new user
                     user.addToRoles(ShiroRole.findByName('ROLE_USER'))
                     // Login user
@@ -207,12 +210,12 @@ class SignupController {
 		userInstance.sex = params.sex;
 		userInstance.save(flash:true);
 		println(params.sex);
+		println userInstance.province ;
 		
 		if (!userInstance.save(flush: true)) {
 			render(view: "accout/1",model:[userInstance:userInstance]);
-			return
 		}
-		
+		render(view: "accout/1",model:[userInstance:userInstance]);
 //		println("local"+params.province_h+" "+params.city_h)
 //		render(view: "accout/1",model:[userInstance:userInstance]);
 	}

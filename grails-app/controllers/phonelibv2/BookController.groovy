@@ -161,7 +161,7 @@ class BookController {
 		}
 		print("2")
 		def user=ShiroUser.findByUsername(principal)
-		if(!user.btouxiang){//娌℃湁澶村儚,鏄剧ず榛樿澶村儚
+		if(!user?.btouxiang){//娌℃湁澶村儚,鏄剧ず榛樿澶村儚
 			def touxiangUrl = "touxiang/default_avatar.jpg"
 			print("3")
 			return [bookInstanceList: bookList,categoryInstanceList: Category.list(), bookInstanceTotal: bookList.totalCount,shiroUserInstance:touxiangUrl]
