@@ -65,27 +65,6 @@ text-decoration: none;
 </style>
 </head>
 <body>
-<!--  
-	<div>
-		<div class="span3">
-			<ul class="well sidebar-nav">
-				<li class="nav-header"><h3>图书类别</h3></li>
-
-				<!-- 分类加载--><!--
-				<g:link url="/phonelibV2/own/list">全部</g:link>
-
-				<g:each in="${categoryInstanceList}" status="i"
-					var="categoryInstance">
-
-					<li class="nav" style="list-style-type: none"><g:link
-							controller="own" action="category" id="${categoryInstance.id}">
-							${categoryInstance.cname}
-						</g:link></li>
-
-				</g:each>
-			</ul>
-		</div>
-		-->
 		
 			<div>
 		<div class="span3">
@@ -133,11 +112,11 @@ text-decoration: none;
 
 					<g:each in="${ownInstanceList}" status="i" var="ownInstance">
 
-						<li style="width:130px; height:200px;margin: 10px 7px 5px 7px;"><a class="thumbnail"
+							<li style="width:130px; height:220px;margin: 10px 7px 5px 7px;"><a class="thumbnail"
 							data-toggle="modal" data-target="#myModal${ownInstance.book.isbn13}"
 							href="javascript:">
 								<div id=${ownInstance.book.isbn13}.img></div>
-								<div class="caption" id=${ownInstance.book.isbn13}.title></div>
+								<div class="caption" id=${ownInstance.book.isbn13}.title style="height:27px; width:115px;">正在加载。。。</div>
 
 						</a>
 
@@ -201,8 +180,8 @@ text-decoration: none;
 						        var Title=re.title;
 						        var bookTitle=re.title;
 						        var len=Title.length;
-						        if(len>6){
-						        	var bookTitle = Title.slice(0, 5);
+						        if(len>15){
+						        	var bookTitle = Title.slice(0, 15);
 							        }
 						       document.getElementById(re.isbn13+'.title').innerHTML=bookTitle; 
 						       document.getElementById(re.isbn13+'.img').innerHTML="<img style=\"height:160px; width:120px;\" src="+re.images.medium+">";

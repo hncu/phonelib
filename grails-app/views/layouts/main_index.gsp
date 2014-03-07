@@ -28,7 +28,7 @@
 		<div class="container">
 				<div class="row-fluid">
 					<g:layoutBody/></div>
-				</div>
+				
 			<g:render template="/layouts/footer"/>		
 		</div>
 		<!--<div class="footer" role="contentinfo"></div>

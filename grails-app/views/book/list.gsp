@@ -129,13 +129,14 @@ text-decoration: none;
 
 					<g:each in="${bookInstanceList}" status="i" var="bookInstance">
 
-						<li style="width:130px; height:200px;margin: 10px 7px 5px 7px;"><a class="thumbnail"
+						<li style="width:130px; height:220px;margin: 10px 7px 5px 7px;"><a class="thumbnail"
 							data-toggle="modal" data-target="#myModal${bookInstance.id}"
 							href="javascript:">
-								<div id=${bookInstance.isbn13}.img><img style="height:160px; width:120px;" src="http://img5.douban.com/mpic/s23692337.jpg"></div>
-								<div class="caption" id=${bookInstance.isbn13}.title>正在加载。。。</div>
+								<div id=${bookInstance.isbn13}.img ><img style="height:160px; width:120px;" src="http://img5.douban.com/mpic/s23692337.jpg"/></div>
+								<div class="caption" id=${bookInstance.isbn13}.title   style="height:27px; width:115px;">正在加载。。。</div>
 
 						</a>
+						
 							<div class="modal hide fade" id="myModal${bookInstance.id}"
 								tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
 								aria-hidden="true">
@@ -202,10 +203,13 @@ text-decoration: none;
 						        var Title=re.title;
 						        var bookTitle=re.title;
 						        var len=Title.length;
-						        if(len>6){
-						        	var bookTitle = Title.slice(0, 5);
+						        if(len>15){
+						        	var bookTitle = Title.slice(0, 15);
+						        	//document.getElementById(re.isbn13+'.title').innerHTML="<font size='1' >"+bookTitle+"</font>"
 							        }
-						       document.getElementById(re.isbn13+'.title').innerHTML=bookTitle; 
+						        //else{
+						       document.getElementById(re.isbn13+'.title').innerHTML=bookTitle;
+							        //}
 						       document.getElementById(re.isbn13+'.img').innerHTML="<img style=\"height:160px; width:120px;\" src="+re.images.medium+">";
 						       document.getElementById(re.isbn13+'.title.dialog').innerHTML=Title;
 						       document.getElementById(re.isbn13+'.img.dialog').innerHTML="<img style=\"height:160px; width:120px;\" src="+re.images.medium+">";
@@ -221,6 +225,7 @@ text-decoration: none;
 				</ul>
 				<!-- end booklist -->
 				
+					<!-- 分页标签 -->
 					<g:paginate total="${bookInstanceTotal}" params="${params}" />
 			
 

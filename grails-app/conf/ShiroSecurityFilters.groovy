@@ -24,7 +24,8 @@ class ShiroSecurityFilters {
 		[controller: 'internalMessage', action: '*', roles: ['ROLE_ADMIN', 'ROLE_USER']],
 		[controller: 'own', action: '*', roles: ['ROLE_ADMIN', 'ROLE_USER']],
 		[controller: 'borrow', action: '*', roles: ['ROLE_ADMIN', 'ROLE_USER']],
-		[controller: 'shiroUser', action: '*', roles: ['ROLE_ADMIN']]
+		[controller: 'shiroUser', action: '*', roles: ['ROLE_ADMIN']],
+		[controller: 'libbook', action: '*', roles: ['ROLE_ADMIN', 'ROLE_USER']]
 	]
 
 	def filters = {

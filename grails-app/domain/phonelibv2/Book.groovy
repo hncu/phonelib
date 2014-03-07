@@ -11,6 +11,7 @@ class Book {
 	String pubdate
 	String summary	
 	String imageUrl
+	String tags
     static constraints = {
 		title(blank:false, nullable:false, unique:false)
 		isbn13(blank:false, unique:false)
@@ -19,6 +20,7 @@ class Book {
 		pubdate(nullable:true)
 		summary(nullable:true)
 		imageUrl(nullable:true)
+		tags(nullable:true)
     }
 	
 	static hasMany=[own:Own,borrow:Borrow]	

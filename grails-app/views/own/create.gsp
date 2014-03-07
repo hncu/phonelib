@@ -48,6 +48,7 @@
 			</g:hasErrors>
 	
 	<g:form method="post" action="save">
+	<g:hiddenField name="author" id="author" value=""/>
 		<table>
 			<tr class='tbTr'>
 				<td class='tbTitle'>

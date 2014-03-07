@@ -8,15 +8,6 @@
 	position: absolute;  
 }
 
-.mark{
-	width:238px;
-	height:42px;	
-	background: url("../../assets/nickname_remark_bg.png") no-repeat left top;	
-	color:#fff;
-	padding:4px 0px 0px 4px;
-	display:none;
-	position: absolute;  
-}
 
 
 .setting_input_title{

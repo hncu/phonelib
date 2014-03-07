@@ -21,8 +21,12 @@
 						<li class="active">
 					</g:if>
 					<g:else><li></g:else>
-					<a href="/phonelibV2/book/list">馆藏图书</a></li>
+					<li><a href="/phonelibV2/book/list">馆藏图书</a></li>
 					<li class="divider-vertical"></li>
+					
+					<li><a href="/phonelibV2/libbook/list">湖南城市学院图书馆查询</a></li>
+					<li class="divider-vertical"></li>
+					
 					<shiro:hasRole name="ROLE_ADMIN">
 						<li><a href="/phonelibV2/shiroUser/list">用户管理</a></li>
 						<li class="divider-vertical"></li>

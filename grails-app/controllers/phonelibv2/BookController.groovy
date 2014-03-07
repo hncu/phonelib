@@ -1,16 +1,35 @@
 package phonelibv2
 
-import groovy.json.JsonBuilder;
+
 
 import org.springframework.dao.DataIntegrityViolationException
 import org.apache.shiro.SecurityUtils
-import org.codehaus.groovy.grails.web.json.JSONArray;
 import org.codehaus.groovy.grails.web.json.JSONObject
-import org.hibernate.type.LongType;
+
+import groovy.json.*
+
+import org.hibernate.type.LongType
+
 
 class BookController {
 
     static allowedMethods = [save: "POST", update: "POST", delete: "POST"]
+	
+	def touxiang = {b ->
+		def principal = SecurityUtils.subject?.principal
+		def userInstance=ShiroUser.findByUsername(principal)
+		if(b){
+			def touxiangUrl = "touxiang/default_avatar.jpg"  //默认头像
+			return touxiangUrl
+		}else{
+
+	def tSize = "btouxiang" //选择头像的类型，这里是大头像
+	def tIndex = userInstance."${tSize}"?.indexOf("touxiang") //44,touxiang是第44位
+	def touxiang =  userInstance."${tSize}"?.substring(tIndex)//touxiang\10\10\1385360315740_162.jpg
+	def touxiangUrl1 = touxiang?.replace('\\', '/');            //touxiang/10/10/1385360315740_162.jpg
+	return touxiangUrl1
+		}
+	}
 
     def bgindex() {
         redirect(action: "bglist", params: params)
@@ -132,15 +151,20 @@ class BookController {
             redirect(action: "bgshow", id: params.id)
         }
     }
-
+                        
 
 	def index() {
 		redirect(action: "list", params: params)
 	}
 
-	def list() {
-		print(params)
-		def categoryInstance = Category.get(params.id)
+	def list() {// HQL 分页查询
+//		print(params)
+		def categoryInstance = null
+		if(params.id != null){
+			print(categoryInstance+"\n")
+			categoryInstance = Category?.get(params.id)
+		}
+		print(categoryInstance)
 		params.max = Math.min(params.max ? params.int('max') : 15, 100)
 		def searchBookByCategory = {
 			if(categoryInstance){
@@ -152,29 +176,14 @@ class BookController {
 		}
 		def c = Book.createCriteria()
 		def bookList = c.list(params,searchBookByCategory)
-	//	render(view:"list",model:[categoryInstanceList: Category.list(),bookInstanceTotal: bookList.totalCount,bookInstanceList:bookList])
-	//	params.max = Math.min(params.max ? params.int('max') : 15, 100)
 		def principal = SecurityUtils.subject?.principal
-		if(!principal){//娌＄櫥闄嗕笉鏄剧ず涓汉淇℃伅
+		if(!principal){//判断是否登录
 			print("1")
-			return [bookInstanceList: bookList,categoryInstanceList: Category.list(), bookInstanceTotal: bookList.totalCount]
-		}
-		print("2")
-		def user=ShiroUser.findByUsername(principal)
-		if(!user?.btouxiang){//娌℃湁澶村儚,鏄剧ず榛樿澶村儚
-			def touxiangUrl = "touxiang/default_avatar.jpg"
-			print("3")
 			return [bookInstanceList: bookList,categoryInstanceList: Category.list(), bookInstanceTotal: bookList.totalCount,shiroUserInstance:touxiangUrl]
 		}
-		
-		def tSize = "btouxiang" //btouxiang 澶�62x162锛宮touxiang涓�8x48锛宻touxiang灏�0x20
-		print("4")
-//		println user.${tSize}  //D:\workspace-ggts\phonelibV2\web-app\images\touxiang\10\10\1385360315740_162.jpg
-		
-		def tIndex = user."${tSize}".indexOf("touxiang") //44,绗竴娆″彂鐜皌ouxiang鐨勫湴鏂�
-		def touxiang =  user."${tSize}".substring(tIndex)//touxiang\10\10\1385360315740_162.jpg  
-		def touxiangUrl = touxiang.replace('\\', '/');            //touxiang/10/10/1385360315740_162.jpg
-		
+		print("2")
+		def userInstance=ShiroUser.findByUsername(principal)
+		def touxiangUrl = touxiang(!userInstance.btouxiang)
 		[bookInstanceList: bookList,categoryInstanceList: Category.list(), bookInstanceTotal: bookList.totalCount,shiroUserInstance:touxiangUrl]
 	}
 
@@ -183,8 +192,6 @@ class BookController {
 	}
 
 	def save() {
-		//		def bookName = params.title
-		//		def isbn = params.isbn13
 		def categoryId = params.category.id
 		//		print params.category.id
 		def bookInstance = new Book()
@@ -305,7 +312,7 @@ class BookController {
 		def bookName = params.bookName
 		def books
 		def bookCount
-		if(bookName.length()==13&&bookName=~'\\d'){
+		if(bookName.length()==13 && bookName=~ /^[0-9]*$/ ){// grails里的正则  =~ , 正则写在//中 
 			books = Book.findAllByIsbn13Like("%${bookName}%")
 		}else{
 			books = Book.findAllByTitleLike("%${bookName}%")
@@ -325,22 +332,50 @@ class BookController {
 	}
 
 	def phoneBookList(){
+	
+		print(params)
 		params.max = Math.min(params.max ? params.int('max') : 15, 100)
-		def bookInstanceList = Book.list(params)
-		def bookCount = Book.count()
-		JSONObject resquestBooklist = new JSONObject()
-		List booklist = []
-		bookInstanceList.each{
-			booklist.add('title':it.title,'isbn13':it.isbn13)
+		def categoryInstance = Category.get(params.category.id)		
+		def principal = SecurityUtils.subject?.principal
+		def userInstance = ShiroUser.findByUsername(principal)
+			
+		def c = Own.createCriteria()
+		String cname = categoryInstance.cname
+		def searchByCategory = {//这是一个闭包
+			book{//默认情况下，条件之间的关系是 与
+				category{
+					eq('cname',cname)
+				}
+			}
+			user{
+				eq('username',userInstance.username)
+			}
 		}
-		resquestBooklist.putOpt("book",booklist)
+		def ownBook = c.list(params,searchByCategory)
+		int bookCount = ownBook.totalCount
+			
+			def resquestArray = []
+			
+			JSONObject requestJsonObject = new JSONObject()
+			
+			ownBook.each{
+				resquestArray.add('title':"${it.book.title}",'author':"${it.book.author}",'isbn13':"${it.book.isbn13}",'imageUrl':"${it.book.imageUrl}")
+			}
+			requestJsonObject.put('cname',cname)
+			requestJsonObject.put('count', bookCount)
+			requestJsonObject.putOpt('books', resquestArray)
+
+			print(requestJsonObject)
+		
 		render(contentType:"text/json"){
-			resquestBooklist
+			requestJsonObject
 		}
+		
 	}
+		
 	
 	def updateBook(){
-		params.offset = 5587
+		params.offset = 0
 		params.max = Math.min(params.max ? params.int('max') : 1000, 1000)
 		Book.list(params).each {
 			JSONObject json= getbooksummy("${it.isbn13}")
@@ -351,6 +386,15 @@ class BookController {
 				String title = json.title
 				String publisher = json.publisher
 				String summary = json.summary
+				String temp = json.tags
+				temp = temp.replaceAll("\\[", "{")
+				temp = temp.replaceAll("\\]","}" )
+				
+				temp = temp.replaceFirst("\\{", "[")
+				temp = temp.replaceAll("\\}}", "}]")
+				
+				String tags = "{\"tags\":"+temp+"}"
+				print(temp) 
 			//	print(summary)
 				params.author = author
 				params.pubdate = pubdate
@@ -358,6 +402,7 @@ class BookController {
 				params.title = title
 				params.publisher = publisher
 				params.summary = summary
+				params.tags = tags
 			//	print(params)
 				def bookInstance = Book.get(it.id)
 				print(bookInstance)
@@ -405,6 +450,19 @@ class BookController {
 		html = null;
 		JSONObject json= new JSONObject(result)
 		return json;
+	}
+	
+	def phonelibSearch(){
+		def bookName = params.bookName
+		def books
+		def bookCount
+		if(bookName.length()==13 && bookName=~ /^[0-9]*$/ ){// grails里的正则  =~ , 正则写在/  /中 
+			books = Book.findAllByIsbn13Like("%${bookName}%")
+		}else{
+			books = Book.findAllByTitleLike("%${bookName}%")
+		}
+		render(view:"list",model:[bookInstanceList:books,bookInstanceTotal: Book.count(), categoryInstanceList: Category.list(params)])
+		
 	}
 
 }

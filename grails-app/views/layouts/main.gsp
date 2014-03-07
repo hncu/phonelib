@@ -34,9 +34,6 @@
 					</shiro:isNotLoggedIn>
 					<shiro:isLoggedIn>
 						<div class="well sidebar-nav" >
-						<!-- 
-						 <g:img dir="images" file="touxiang/5/0/1385365529295_162.jpg"/>
-						 -->
 					<g:link controller="signup" action="tx"><img src="${resource(dir: 'images', file: "${shiroUserInstance}")}"> </g:link>
 						<shiro:principal />
 						<br/>
