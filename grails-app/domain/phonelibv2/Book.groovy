@@ -20,7 +20,6 @@ class Book {
 		pubdate(nullable:true)
 		summary(nullable:true)
 		imageUrl(nullable:true)
-		tags(nullable:true)
     }
 	
 	static hasMany=[own:Own,borrow:Borrow]	

@@ -43,23 +43,7 @@ function ChangeOptionDays(Which)
     if (DaysObject.selectedIndex < 0) DaysObject.selectedIndex == 0;
 }
 //选图
-function selectImg (file){
-    $("#loading").css('display' , 'inline');
-    
-    $("#upload").ajaxSubmit({
-        dataType:  'json', //数据格式为json 
-        success: function(data) { //成功 
-            $("#book_img").attr('src' , data['url']);
-            $("#image_url").attr('value',data['val']);
-            $("#loading").css('display' , 'none');
-        },
-        error:function(xhr){ //上传失败 
-            $("#uploadNotice").html("&emsp;上传失败");
-            $("#loading").css('display' , 'none');
-            alert(xhr.responseText);
-        } 
-    }); 
-}
+
 
 function Confirm(question, question2 ,  callback)
 {
@@ -324,7 +308,6 @@ $("#isbn").keydown(function(event){
                     $('#preRstBtn2').css('display' , 'none');
                 }
                 
-                // if(result['r'] && result['r'].result && result['r'].result['total'] > 0){//有结果        
                     if(result){        
                     for(i = 0; i < 20; i++) {
                         
@@ -354,48 +337,26 @@ $("#isbn").keydown(function(event){
                                break;
                            }
                         }  
-                        // $.each(arr1, function(i,item){     
-                         // alert(item[0]);     
-                          // }); 
-                        // alert(result.entry[i].link['@rel']);
-                        // var doubanimg = result.entry[i].link['image']['@href'];
-                        
-                        // alert(book);
+                      
                         
                             var a = 0;
                             a++;
 
                         
                         var link = $("#url").val() + '/site/searchdetail/sid/' + book_name['sid'];
-                        // var li = "<li id=" + book['sid'] + "><a href='"+ link + "' target='_blank'><img src='" + book['img'] + "'/></a><br/>" + book['sname'] + "</li>";
- var li = "<li id='libook'  '><a href='javascript:void(0);' id="+isbn13+" name='aisbn' onclick='$(\"#book_name\").val(\""+book_name+"\");$(\"#isbn\").val(\""+isbn13+"\")'><img src='" + doubanimg + "'/></a><br/>" + book_name + "</li>"; 
- // var li1 = "<li><input type='radio' name='identity' value="+book_name+" /></li>";                      
-                        // document.getElementByName('aisbn').onclick=function(){alert("as");};
-                        
+
+                        var li = "<li id='libook'  '><a href='javascript:void(0);' id="+isbn13+" name='aisbn' onclick='$(\"#book_name\").val(\""+book_name+"\");$(\"#isbn\").val(\""+isbn13+"\")'><img src='" + doubanimg + "'/></a><br/>" + book_name + "</li>"; 
+ 
                         $("a[name='isbn13']").onclick=function(){alert("as");};
 
                          $("#booksList").append(li);
-                        // $("#libook").bind("click", function(){
-                          
-
-                           // $("a[name="+a+"]").click(function() {
-                               // var a = isbn13;
-                            // document.getElementById("isbn13").click(function(){
-                               // $('"#"+isbn13').click(function() {
-                                // // var aid = $("a[name='aisbn']").attr('id');
-                                // // alert(aid);
-                                // var a = $("#"+isbn13).attr("id");
-                                // alert(a);
-                            // });
+   
                             function xianshi(){
                               alert("a");  
                             };
                     }
 
-                        // $("#inputisbn").click(function() {
-                                // alert("a");
-                            // });
-                    
+
                     $("#middle_title").css('display' , 'inline');
                     
                 } else if(!result['notice'] && ( !result['r']) || !result['r'].result || result['r'].result['total'] <=0){
@@ -575,7 +536,7 @@ $("#SubBtn").click(function(){
                 
             } else if(result['r'] && result['r']['result']){
             
-                Confirm('感谢您让晒书房多认识了一本书！:)' , '是否将这本书也添加到您的书房中？' , function(yes) {      
+                Confirm('感谢您让我们多认识了一本书！:)' , '是否将这本书也添加到您的书房中？' , function(yes) {      
                     if(yes)
                     {
                         $.post(BASEURL + '/index.php/ajax/bookroomadd', {

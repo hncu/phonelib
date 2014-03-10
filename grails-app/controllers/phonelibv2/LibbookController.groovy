@@ -3,27 +3,10 @@ package phonelibv2
 import org.springframework.dao.DataIntegrityViolationException
 import groovy.json.*
 import org.codehaus.groovy.grails.web.json.JSONObject
-import org.apache.shiro.SecurityUtils
 
 class LibbookController {
 
     static allowedMethods = [save: "POST", update: "POST", delete: "POST"]
-	
-	def touxiang = {b ->
-		def principal = SecurityUtils.subject?.principal
-		def userInstance=ShiroUser.findByUsername(principal)
-		if(b){
-			def touxiangUrl = "touxiang/default_avatar.jpg"  //默认头像
-			return touxiangUrl
-		}else{
-
-	def tSize = "btouxiang" //选择头像的类型，这里是大头像
-	def tIndex = userInstance."${tSize}"?.indexOf("touxiang") //44,touxiang是第44位
-	def touxiang =  userInstance."${tSize}"?.substring(tIndex)//touxiang\10\10\1385360315740_162.jpg
-	def touxiangUrl1 = touxiang?.replace('\\', '/');            //touxiang/10/10/1385360315740_162.jpg
-	return touxiangUrl1
-		}
-	}
 
     def index() {
         redirect(action: "list", params: params)
@@ -31,26 +14,7 @@ class LibbookController {
 
     def list() {
         params.max = Math.min(params.max ? params.int('max') : 2, 100)
-//		def principal = SecurityUtils.subject?.principal
-//		if(!principal){//判断是否登录
-//			print("1")
-//			redirect(controller:"auth" ,action: "login")
-//			return ;
-//		}
-//		print("2")
-//		def userInstance=ShiroUser.findByUsername(principal)
-//		def touxiangUrl = touxiang(!userInstance.btouxiang)
-		def principal = SecurityUtils.subject?.principal
-		if(!principal){//判断是否登录
-			print("1")
-			return [libbookInstanceList: Libbook.list(params), libbookInstanceTotal: Libbook.count(),shiroUserInstance:touxiangUrl]
-		}
-		print("2")
-		def userInstance=ShiroUser.findByUsername(principal)
-		def touxiangUrl = touxiang(!userInstance.btouxiang)
-		
-        [libbookInstanceList: Libbook.list(params), libbookInstanceTotal: Libbook.count(),shiroUserInstance:touxiangUrl]
-		
+        [libbookInstanceList: Libbook.list(params), libbookInstanceTotal: Libbook.count()]
     }
 
     def create() {
@@ -146,7 +110,7 @@ class LibbookController {
 	def updateBook(){
 		
 		for(int i = 0;i<=200;i++){
-			params.offset = 2000 +i*1000
+			params.offset = 81997 +i*1000
 		params.max = Math.min(params.max ? params.int('max') : 1000, 1000)
 		Libbook.list(params).each {
 			JSONObject json= getbooksummy("${it.isbn13}")

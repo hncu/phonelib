@@ -14,22 +14,6 @@ import org.hibernate.type.LongType
 class BookController {
 
     static allowedMethods = [save: "POST", update: "POST", delete: "POST"]
-	
-	def touxiang = {b ->
-		def principal = SecurityUtils.subject?.principal
-		def userInstance=ShiroUser.findByUsername(principal)
-		if(b){
-			def touxiangUrl = "touxiang/default_avatar.jpg"  //默认头像
-			return touxiangUrl
-		}else{
-
-	def tSize = "btouxiang" //选择头像的类型，这里是大头像
-	def tIndex = userInstance."${tSize}"?.indexOf("touxiang") //44,touxiang是第44位
-	def touxiang =  userInstance."${tSize}"?.substring(tIndex)//touxiang\10\10\1385360315740_162.jpg
-	def touxiangUrl1 = touxiang?.replace('\\', '/');            //touxiang/10/10/1385360315740_162.jpg
-	return touxiangUrl1
-		}
-	}
 
     def bgindex() {
         redirect(action: "bglist", params: params)
@@ -46,14 +30,7 @@ class BookController {
     }
 
     def bgsave() {
-//        def bookInstance = new Book(params)
-//        if (!bookInstance.save(flush: true)) {
-//            render(view: "bgcreate", model: [bookInstance: bookInstance])
-//            return
-//        }
-//
-//		flash.message = message(code: 'default.created.message', args: [message(code: 'book.label', default: 'Book'), bookInstance.id])
-//        redirect(action: "bgshow", id: bookInstance.id)
+
 		def categoryId = params.category.id
 		def bookInstance = new Book()
 		bookInstance.title = params.title
@@ -91,35 +68,7 @@ class BookController {
     }
 
     def bgupdate() {
-//        def bookInstance = Book.get(params.id)
-//        if (!bookInstance) {
-//            flash.message = message(code: 'default.not.found.message', args: [message(code: 'book.label', default: 'Book'), params.id])
-//            redirect(action: "bglist")
-//            return
-//        }
-//
-//        if (params.version) {
-//            def version = params.version.toLong()
-//            if (bookInstance.version > version) {
-//                bookInstance.errors.rejectValue("version", "default.optimistic.locking.failure",
-//                          [message(code: 'book.label', default: 'Book')] as Object[],
-//                          "Another user has updated this Book while you were editing")
-//                render(view: "bgedit", model: [bookInstance: bookInstance])
-//                return
-//            }
-//        }
-//
-//        bookInstance.properties = params
-//
-//        if (!bookInstance.save(flush: true)) {
-//            render(view: "bgedit", model: [bookInstance: bookInstance])
-//            return
-//        }
-//
-//		flash.message = message(code: 'default.updated.message', args: [message(code: 'book.label', default: 'Book'), bookInstance.id])
-//        redirect(action: "bgshow", id: bookInstance.id)
 		def categoryId = params.category.id
-//		def bookInstance = new Book()
 		def bookInstance = Book.get(params.id)
 		bookInstance.title = params.title
 		bookInstance.isbn13 = params.isbn13
@@ -157,8 +106,34 @@ class BookController {
 		redirect(action: "list", params: params)
 	}
 
-	def list() {// HQL 分页查询
-//		print(params)
+	def list() {
+		print(params)
+		List categoryList =	Category.list()
+		List resquestArray = []
+		categoryList.each{
+			def c = Own.createCriteria()
+			String cname = it.cname
+			def searchByCategory = {
+				book{
+					category{
+						eq('cname',cname)
+					}
+				}
+			
+			}
+			def ownBook = c.list(params,searchByCategory)
+			print(ownBook)
+			int bookCount = ownBook.totalCount
+			resquestArray.add(categoryIntance:it,bookCount:bookCount)
+		}
+		resquestArray.bookCount.sort()
+		categoryList = []
+		resquestArray.sort{
+			 a,b ->
+            b.bookCount <=>  a.bookCount 
+		}
+		categoryList = resquestArray
+		
 		def categoryInstance = null
 		if(params.id != null){
 			print(categoryInstance+"\n")
@@ -176,15 +151,11 @@ class BookController {
 		}
 		def c = Book.createCriteria()
 		def bookList = c.list(params,searchBookByCategory)
-		def principal = SecurityUtils.subject?.principal
-		if(!principal){//判断是否登录
-			print("1")
-			return [bookInstanceList: bookList,categoryInstanceList: Category.list(), bookInstanceTotal: bookList.totalCount,shiroUserInstance:touxiangUrl]
-		}
-		print("2")
-		def userInstance=ShiroUser.findByUsername(principal)
-		def touxiangUrl = touxiang(!userInstance.btouxiang)
-		[bookInstanceList: bookList,categoryInstanceList: Category.list(), bookInstanceTotal: bookList.totalCount,shiroUserInstance:touxiangUrl]
+	//	render(view:"list",model:[categoryInstanceList: Category.list(),bookInstanceTotal: bookList.totalCount,bookInstanceList:bookList])
+	//	params.max = Math.min(params.max ? params.int('max') : 15, 100)
+		
+		
+		[bookInstanceList: bookList,categoryInstanceList: categoryList, bookInstanceTotal: bookList.totalCount]
 	}
 
 	def create() {
@@ -192,6 +163,8 @@ class BookController {
 	}
 
 	def save() {
+		//		def bookName = params.title
+		//		def isbn = params.isbn13
 		def categoryId = params.category.id
 		//		print params.category.id
 		def bookInstance = new Book()
@@ -312,7 +285,7 @@ class BookController {
 		def bookName = params.bookName
 		def books
 		def bookCount
-		if(bookName.length()==13 && bookName=~ /^[0-9]*$/ ){// grails里的正则  =~ , 正则写在//中 
+		if(bookName.length()==13&&bookName=~'\\d'){
 			books = Book.findAllByIsbn13Like("%${bookName}%")
 		}else{
 			books = Book.findAllByTitleLike("%${bookName}%")
@@ -341,8 +314,8 @@ class BookController {
 			
 		def c = Own.createCriteria()
 		String cname = categoryInstance.cname
-		def searchByCategory = {//这是一个闭包
-			book{//默认情况下，条件之间的关系是 与
+		def searchByCategory = {
+			book{
 				category{
 					eq('cname',cname)
 				}
@@ -395,7 +368,7 @@ class BookController {
 				
 				String tags = "{\"tags\":"+temp+"}"
 				print(temp) 
-			//	print(summary)
+			
 				params.author = author
 				params.pubdate = pubdate
 				params.imageUrl = imageUrl
@@ -403,7 +376,7 @@ class BookController {
 				params.publisher = publisher
 				params.summary = summary
 				params.tags = tags
-			//	print(params)
+			
 				def bookInstance = Book.get(it.id)
 				print(bookInstance)
 				bookInstance.properties = params
@@ -450,19 +423,6 @@ class BookController {
 		html = null;
 		JSONObject json= new JSONObject(result)
 		return json;
-	}
-	
-	def phonelibSearch(){
-		def bookName = params.bookName
-		def books
-		def bookCount
-		if(bookName.length()==13 && bookName=~ /^[0-9]*$/ ){// grails里的正则  =~ , 正则写在/  /中 
-			books = Book.findAllByIsbn13Like("%${bookName}%")
-		}else{
-			books = Book.findAllByTitleLike("%${bookName}%")
-		}
-		render(view:"list",model:[bookInstanceList:books,bookInstanceTotal: Book.count(), categoryInstanceList: Category.list(params)])
-		
 	}
 
 }

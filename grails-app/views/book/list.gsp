@@ -73,14 +73,15 @@ text-decoration: none;
 				<g:else><li class="category"></g:else>
 					<g:link url="/phonelibV2/book/list">全部</g:link>
 				</li>
+				
 				<g:each in="${categoryInstanceList}" status="i"
-					var="categoryInstance">
-					<div >
-						<g:if test="${(""+categoryInstance.id)==params.id}"><li class="category" style="background-image:url(/phonelibV2/images/category_action.jpg);width: 160px;"></g:if>
+					var="category">
+					<div>
+						<g:if test="${(""+category.categoryIntance.id)==params.id}"><li class="category" style="background-image:url(/phonelibV2/images/category_action.jpg);width: 160px;"></g:if>
 						<g:else><li class="category"></g:else>
 							<g:link controller="book"
-								action="list" id="${categoryInstance.id}">
-								${categoryInstance.cname}
+								action="list" id="${category.categoryIntance.id}">
+								${category.categoryIntance.cname+" "+category.bookCount}
 							</g:link></li>
 					</div>
 				</g:each>
@@ -132,8 +133,8 @@ text-decoration: none;
 						<li style="width:130px; height:220px;margin: 10px 7px 5px 7px;"><a class="thumbnail"
 							data-toggle="modal" data-target="#myModal${bookInstance.id}"
 							href="javascript:">
-								<div id=${bookInstance.isbn13}.img ><img style="height:160px; width:120px;" src="http://img5.douban.com/mpic/s23692337.jpg"/></div>
-								<div class="caption" id=${bookInstance.isbn13}.title   style="height:27px; width:115px;">正在加载。。。</div>
+								<div id=${bookInstance.isbn13}.img ><img style="height:160px; width:120px;" src="${bookInstance.imageUrl }"/></div>
+								<div class="caption" id=${bookInstance.isbn13}.title   style="height:27px; width:115px;">${bookInstance.title }</div>
 
 						</a>
 						
@@ -146,13 +147,13 @@ text-decoration: none;
 											<button type="button" class="close" data-dismiss="modal"
 												aria-hidden="true">&times;</button>
 											<h4 class="modal-title" id="myModalLabel">
-												<div id="${bookInstance.isbn13}.title.dialog"></div>
+												<div>${bookInstance.title}</div>
 											</h4>
 										</div>
 										<div class="modal-body">
 											<div class="row-fluid">
 												<div class="span3">
-													<div id=${bookInstance.isbn13}.img.dialog></div>
+													<div id=${bookInstance.isbn13}.img.dialog><img style=\"height:160px; width:120px;\" src="${bookInstance.imageUrl}"></div>
 												</div>
 												<div class="span9">
 													拥有者:<g:each in="${(bookInstance.own.user)}" var="userInstance">
@@ -161,15 +162,15 @@ text-decoration: none;
 												 	    	</g:each>
 													<br/>
 													分类：${fieldValue(bean: bookInstance, field: "category.cname")}</br>
-													isbn:${bookInstance.isbn13}
-													<div id=${bookInstance.isbn13}.author.dialog></div>
-													<div id=${bookInstance.isbn13}.publisher.dialog></div>
-													<div id=${bookInstance.isbn13}.pubdate.dialog></div>
+													isbn:${bookInstance.isbn13}</br>
+													作者：:${bookInstance.author} </br>
+													出版社：${bookInstance.publisher}</br>
+													出版时间：${bookInstance.pubdate}</br>
 												</div>
 											</div>
 											<div class="span12">
 												<h5 style="color: #888888;">--内容简介--</h5>
-												<div id=${bookInstance.isbn13}.summary></div>
+												&nbps;${bookInstance.summary }
 											</div>
 										</div>
 										<div class="modal-footer">
@@ -194,7 +195,7 @@ text-decoration: none;
 							</div>
 							<!-- /.modal --></li>
 
-						<script type="text/javascript">
+					<!--	<script type="text/javascript">
 					DOUBAN.apikey = 
 						DOUBAN.getISBNBook({
 						    isbn:${bookInstance.isbn13},
@@ -220,19 +221,14 @@ text-decoration: none;
 						    }
 						})
 					</script>
-
+-->
 					</g:each>
 				</ul>
 				<!-- end booklist -->
 				
-					<!-- 分页标签 -->
 					<g:paginate total="${bookInstanceTotal}" params="${params}" />
-			
-
 			</div>
 		</div>
-
-
 	</div>
 </body>
 </html>

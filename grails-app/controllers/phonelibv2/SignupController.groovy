@@ -32,10 +32,8 @@ class SignupController {
             // Make sure the passwords match
 		println params.passwordHash.length()
 		if(params.passwordHash.length()<6){
-			println "密码长度="+params.passwordHash.length()
 			flash.message = "密码长度不能少于6位"
 			redirect(action:'create')
-			return ;
 			}
             if (params.passwordHash != params.password2) {
                 flash.message = "两次输入的密码不一致"
@@ -239,70 +237,6 @@ class SignupController {
 			render 1;
 		}
 	}
-	
-	def phoneRegister(){
-		println "手机端注册"
-		println "手机端发来的信息="+params;
-		def user=ShiroUser.findByUsername(params.username)
-		if (user) {
-//			flash.message = " '${params.username}'，该用户名已经被注册"
-//			redirect(action:'create')
-			render(contentType:"text/json"){
-				rend(register:"N",message:"该用户名已经被注册")
-				return ;
-			}
-		} else { // User doesn't exist with username. Let's create one
-			// Make sure the passwords match
-		println params.passwordHash.length()
-		if(params.passwordHash.length()<6){
-			flash.message = "密码长度不能少于6位"
-			redirect(action:'create')
-			}
-//			if (params.passwordHash != params.password2) {
-//				flash.message = "两次输入的密码不一致"
-//				redirect(action:'create')
-//				println "两次输入的密码不一致"
-//				return ;
-//			}
-//		 else 
-//		 { // Passwords match. Let's attempt to save the user
-				// Create user
-//                user = new ShiroUser(username: params.username,passwordHash: shiroSecurityService.encodePassword(params.passwordHash),email:params.email)
-			println "两次输入一致"
-			 user = new ShiroUser();
-				user.username = params.username
-				user.passwordHash = shiroSecurityService.encodePassword(params.passwordHash)
-				user.email = params.email
-				
-				if (user.save(flush:true)) {
-					// Add USER role to new user
-					user.addToRoles(ShiroRole.findByName('ROLE_USER'))
-					// Login user
-					def authToken = new UsernamePasswordToken(user.username, params.passwordHash)
-					mailService.sendMail {
-						//to "${params.email}"
-						to '2594942200@qq.com'
-						from 'xieluhong09 <xieluhong09@126.com>'
-						subject "您已完成注册"
-						body '感谢您的使用'
-					}
-					
-			
-					
-					SecurityUtils.subject.login(authToken)
-					
-//					redirect(controller: 'book', action: 'list')
-//					rend(register:"Y")
-					render(contentType:"text/json"){
-						rend(register:"Y")
-						return ;
-					}
-				}else {
-				render(view: "create", model: [shiroUserInstance: user])
-				return
-				}
-			}
-		}
 	
 	//保留，以后留着做ajax
 //	def createJS(){

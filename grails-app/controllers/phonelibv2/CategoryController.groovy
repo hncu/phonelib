@@ -208,6 +208,7 @@ class CategoryController {
 			def bookInstance = userInstance.own.book
 			List categoryList = bookInstance.category
 			categoryList.unique()
+			
 			def count = categoryList.size()
 			def resquestArray = []
 			JSONObject requestJsonObject = new JSONObject()
@@ -240,31 +241,6 @@ class CategoryController {
 			requestJsonObject.put('categoryCount', categoryList.size())
 			requestJsonObject.putOpt('category', resquestArray)
 			print(requestJsonObject)
-			/*categoryList.each {
-				def resquestBook=["book"]
-				params.max = Math.min(params.max ? params.int('max') : 5, 100)
-				def c = Book.createCriteria()
-				String cname = it.cname
-				def searchByCategory = {
-					category{
-						eq('cname',cname)
-					}
-				}
-				def books = c.list(params,searchByCategory)
-				def bookCount = books.totalCount
-				books.each {
-					resquestBook.add('title':"${it.title}")
-				}
-				resquestCname.add('id':"${it.id}",'cname':"${it.cname}",'book':"${resquestBook}" ,bookCount:"${bookCount}")
-				
-			}
-			print(resquestCname)*/
-			//categoryInstance.remove("books")
-			//categoryJson.remove(categoryJson.class)
-		//	JsonBuilder category = categoryInstance
-		//	print (category.toString())
-		//	category.remove('class')
-		//	print(category)
 			render(contentType:"text/json"){
 				requestJsonObject
 			}

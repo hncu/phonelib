@@ -1,11 +1,4 @@
-		def principal = SecurityUtils.subject?.principal
-		if(!principal){//判断是否登录
-			print("1")
-			return [bookInstanceList: bookList,categoryInstanceList: Category.list(), bookInstanceTotal: bookList.totalCount]
-		}
-		print("2")
-		def userInstance=ShiroUser.findByUsername(principal)
-		def touxiangUrl = touxiang(!userInstance.btouxiang)<%@ page import="phonelibv2.Own" %>
+<%@ page import="phonelibv2.Own" %>
 <!doctype html>
 <html>
 	<head>

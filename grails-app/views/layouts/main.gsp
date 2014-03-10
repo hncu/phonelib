@@ -30,11 +30,19 @@
 					<div class="span10"><g:layoutBody/></div>
 					<div id="span2" class="span2">
 					<shiro:isNotLoggedIn>
-					<h2>为了更好地体验，请登录</h2>
+					<h3>为了更好地体验，请<a href="/phonelibV2/auth/login">登录</a></h3>
 					</shiro:isNotLoggedIn>
 					<shiro:isLoggedIn>
+						<script type="text/javascript">
+								$.post("/phonelibV2/auth/getTouXiang",
+										 function(data) {
+									 		if(data!=0){
+										 		document.getElementById('userTouxiang').innerHTML="<img src=${resource(dir: 'images', file: "\"+data+\"")} >";
+									 		}});
+					
+						</script>
 						<div class="well sidebar-nav" >
-					<g:link controller="signup" action="tx"><img src="${resource(dir: 'images', file: "${shiroUserInstance}")}"> </g:link>
+							<g:link controller="signup" action="tx"><div id="userTouxiang" name = "userTouxiang"> </div></g:link>
 						<shiro:principal />
 						<br/>
 						益阳 赫山区 

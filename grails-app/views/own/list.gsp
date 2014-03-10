@@ -76,13 +76,13 @@ text-decoration: none;
 						<g:else><li class="category"></g:else><g:link url="/phonelibV2/own/list">全部</g:link>
 				</li>
 				<g:each in="${categoryInstanceList}" status="i"
-					var="categoryInstance">
+					var="category">
 					<div>
-						<g:if test="${(""+categoryInstance.id)==params.id}"><li class="category" style="background-image:url(/phonelibV2/images/category_action.jpg);width: 160px;"></g:if>
+						<g:if test="${(""+category.categoryIntance.id)==params.id}"><li class="category" style="background-image:url(/phonelibV2/images/category_action.jpg);width: 160px;"></g:if>
 						<g:else><li class="category"></g:else>
 							<g:link controller="own"
-								action="list" id="${categoryInstance.id}">
-								${categoryInstance.cname}
+								action="list" id="${category.categoryIntance.id}">
+								${category.categoryIntance.cname+" "+category.bookCount}
 							</g:link></li>
 					</div>
 				</g:each>
@@ -94,7 +94,7 @@ text-decoration: none;
 		<div class="span9">
 			
 			<div id="list-book" class="content scaffold-list" role="main">
-			<h1>图书列表</h1>
+			<h1>我的图书</h1>
 			
 			 <g:form class="form-search" action="search">
 				&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:red;">new:</span><g:link action="create">创建一本新书</g:link>&nbsp;&nbsp;&nbsp;&nbsp;   <g:textField name="bookName" />

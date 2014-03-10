@@ -143,5 +143,20 @@ class AuthController {
 		}
 	}
 	
+	def getTouXiang = {
+		def principal = SecurityUtils.subject?.principal
+		def user=ShiroUser.findByUsername(principal)
+		def touxiangUrl = "touxiang/default_avatar.jpg"  //默认头像
+		if(user.btouxiang){//登录后，判断是否有头像
+			def tSize = "btouxiang" //选择头像的类型，这里是大头像
+			def tIndex = user."${tSize}"?.indexOf("touxiang")
+			def touxiang =  user."${tSize}"?.substring(tIndex)
+			touxiangUrl = touxiang?.replace('\\', '/');
+		}
+		print(touxiangUrl)
+		render touxiangUrl
+		
+	}
+	
 	
 }

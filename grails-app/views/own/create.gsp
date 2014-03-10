@@ -48,7 +48,6 @@
 			</g:hasErrors>
 	
 	<g:form method="post" action="save">
-	<g:hiddenField name="author" id="author" value=""/>
 		<table>
 			<tr class='tbTr'>
 				<td class='tbTitle'>
@@ -88,10 +87,6 @@
 	  </g:form>
 	    <br/>
 	    <input type='hidden' value='29688' name='uid' id='uid'/>
-
-	<!--/form-->  
-	    <!--input type="file" name="attached_file" id="attached_file" style='display:none' />
-	    <input type="submit" name="submitBtn" value="立即上传" style='display:none' -->
 	    
 		<input type='hidden' value='/index.php' id='url'/>
 		<div  id='middle_title'><h3>请单击选择你要添加的书:</h3></div>

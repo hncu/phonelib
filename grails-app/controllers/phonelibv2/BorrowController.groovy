@@ -10,22 +10,6 @@ import org.hibernate.FetchMode;
 class BorrowController {
 
     static allowedMethods = [save: "POST", update: "POST", delete: "POST"]
-	
-	def touxiang = {b ->
-		def principal = SecurityUtils.subject?.principal
-		def userInstance=ShiroUser.findByUsername(principal)
-		if(b){
-			def touxiangUrl = "touxiang/default_avatar.jpg"  //默认头像
-			return touxiangUrl
-		}else{
-
-	def tSize = "btouxiang" //选择头像的类型，这里是大头像
-	def tIndex = userInstance."${tSize}"?.indexOf("touxiang") //44,touxiang是第44位
-	def touxiang =  userInstance."${tSize}"?.substring(tIndex)//touxiang\10\10\1385360315740_162.jpg
-	def touxiangUrl1 = touxiang?.replace('\\', '/');            //touxiang/10/10/1385360315740_162.jpg
-	return touxiangUrl1
-		}
-	}
 
     def bgindex() {
         redirect(action: "bglist", params: params)
@@ -141,13 +125,16 @@ class BorrowController {
 			def c = Borrow.createCriteria()
 			def borrowInstanceList = c.list(params,search)
 			def count = borrowInstanceList.totalCount
-		if(!principal){//判断是否登录
-			print("1")
-			return [bookInstanceList: bookList,categoryInstanceList: Category.list(), bookInstanceTotal: bookList.totalCount]
-		}
-		print("2")
-		def userInstance=ShiroUser.findByUsername(principal)
-		def touxiangUrl = touxiang(!userInstance.btouxiang)
+			if(!shiroUserInstance.btouxiang){//登录后，判断是否有头像
+				def touxiangUrl = "touxiang/default_avatar.jpg" //默认头像
+				render(view: "list", model:[borrowInstanceList: borrowInstanceList, categoryInstanceList: (borrowInstanceList.book).category,borrowInstanceTotal: count,shiroUserInstance:touxiangUrl])
+				return
+				}
+			
+			def tSize = "btouxiang" //btouxiang 澶�62x162锛宮touxiang涓�8x48锛宻touxiang灏�0x20
+			def tIndex = shiroUserInstance?."${tSize}"?.indexOf("touxiang") //44,绗竴娆″彂鐜皌ouxiang鐨勫湴鏂�
+			def touxiang =  shiroUserInstance?."${tSize}"?.substring(tIndex)//touxiang\10\10\1385360315740_162.jpg
+			def touxiangUrl = touxiang?.replace('\\', '/');            //touxiang/10/10/1385360315740_162.jpg
 		
 			params.max = Math.min(params.max ? params.int('max') : 15, 100)
 			render(view: "list", model:[borrowInstanceList: borrowInstanceList, categoryInstanceList: (borrowInstanceList.book).category,borrowInstanceTotal: count,shiroUserInstance:touxiangUrl])
@@ -165,13 +152,19 @@ class BorrowController {
 			def borrowInstanceList = c.list(params,search)
 			def count = borrowInstanceList.totalCount
 			
-		if(!principal){//判断是否登录
-			print("1")
-			return [borrowInstanceList: borrowInstanceList, categoryInstanceList: (borrowInstanceList.book).category,borrowInstanceTotal: count]
-		}
-		print("2")
-		def userInstance=ShiroUser.findByUsername(principal)
-		def touxiangUrl = touxiang(!userInstance.btouxiang)
+			if(!shiroUserInstance.btouxiang){//登录后，判断是否有头像
+				def touxiangUrl = "touxiang/default_avatar.jpg"  //默认头像
+				println("1");
+				render(view: "list", model:[borrowInstanceList: borrowInstanceList, categoryInstanceList: (borrowInstanceList.book).category,borrowInstanceTotal: count,shiroUserInstance:touxiangUrl])
+				return 
+			}
+			println("2");
+			def tSize = "btouxiang"  //选择头像的类型，这里是大头像
+			def tIndex = shiroUserInstance."${tSize}".indexOf("touxiang") //44,touxiang是第44位
+			def touxiang =  shiroUserInstance."${tSize}".substring(tIndex)//touxiang\10\10\1385360315740_162.jpg
+			def touxiangUrl = touxiang.replace('\\', '/');            //touxiang/10/10/1385360315740_162.jpg
+			
+			params.max = Math.min(params.max ? params.int('max') : 10, 100)
 	
 			render(view: "list", model:[borrowInstanceList: borrowInstanceList, categoryInstanceList: (borrowInstanceList.book).category,borrowInstanceTotal: count,shiroUserInstance:touxiangUrl])
 			return 

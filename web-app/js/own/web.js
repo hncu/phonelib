@@ -1,4 +1,4 @@
-//ajax 加载效果
+/*//ajax 加载效果
 //$(document).ajaxStart(loading).ajaxStop(clear_loading).ajaxComplete(clear_loading).ajaxError(clear_loading);
 
 //加载提示
@@ -61,7 +61,7 @@ $(function() {
 			}
 		}, 'json');
 	});
-	/*
+	
 	$('#statusList li').live('click', function () {
 		val = $(this).attr('id');
 		$('#currentPage').val(1);
@@ -153,8 +153,8 @@ $(function() {
 		}
 		return false;
 	});
-	*/
-	/*
+	
+	
 	$('#booksList li').live('click', function () {
 		ubid = $(this).attr('id');
 		if (ubid.substr(0,1) == 'u') {
@@ -164,7 +164,7 @@ $(function() {
 			bookDetail(ubid, 'self');
 		}
 	});
-	*/
+	
 	$('#morebutton a').click(function(){
 		$('#moreCategorys').show();
 		$('#morebutton a').hide();
@@ -240,7 +240,7 @@ $(function() {
 		}
 	});
 
-/*
+
 	$('#bookSource img').click(function(){
 		val = $(this).attr('id');
 		bid = $('#bid').val();		
@@ -277,7 +277,7 @@ $(function() {
 			
 		}, 'json');
 	});
-*/	
+	
 	$('#sendMessage').click(function () {
 
 		message = $('#message_content').val();
@@ -329,10 +329,10 @@ $(function() {
 	});
 	
 	function dialogue(content, title) {
-		/* 
+		 
 		 * Since the dialogue isn't really a tooltip as such, we'll use a dummy
 		 * out-of-DOM element as our target instead of an actual element like document.body
-		 */
+		 
 		$('<div />').qtip(
 		{
 			content: {
@@ -389,47 +389,6 @@ $(function() {
 	}
  
 
-	// $('#user_mind').qtip(
-	// {		
-		// id:'fd',
-		// content: {
-			// text: $('#feedback'),
-			// title: {
-				// text: '请花点时间给我们一点建议：）',
-				// button: true
-			// }
-		// },
-		// position: {
-			// my: 'center', // ...at the center of the viewport
-			// at: 'center',
-			// target: $(window)
-		// },
-		// hide: true,
-		// show: {
-			// ready: false,
-			// event:'click',
-			// modal: {
-				// on: true,
-				// // Don't let users exit the modal in any way
-				// blur: false,
-				// escape: true
-			// }
-		// },
-		// style: {
-			// classes: 'ui-tooltip-light ui-tooltip-rounded',
-			// tip: false			
-		// },
-		// events: {
-			// render: function() {
-				// alert("a")
-				// // $('#btnSubmitFeedback').bind('click', function() {
-				  // // alert('User clicked on "zhongyu OK"');
-				  // // $('#ui-tooltip-fd').qtip('hide');
-				// // });
-// // 				
-			// }
-		// }
-	// });
 	
 	
 	$('#btnSubmitFeedback').click(function(event) {
@@ -460,14 +419,7 @@ $(function() {
 		// Prevent normal form submission
 		event.preventDefault();		
 	});
-	/*
-	$('#btnCancelFeedback').click(function(event) {
-		$('#ui-tooltip-fd').qtip('hide');
-		//event.preventDefault();		
-	});
-	*/
-	
-	// Our Prompt method
+
 	function UserMindPrompt(question, initial, callback)
 	{
 		// Content will consist of a question elem and input, with ok/cancel buttons
@@ -490,9 +442,9 @@ $(function() {
 	
 	$("#user_mind").floatdiv({right:"0px",bottom:"100px"});
 	
-	/**
+	*//**
 	 * X人收藏
-	 */
+	 *//*
 	$('#bookUserCollect').qtip(
 			{		
 				id:'usercollect',
@@ -530,9 +482,9 @@ $(function() {
 		        }
 			});
 
-	/**
+	*//**
 	 * X人在读 
-	 */
+	 *//*
 	$('#bookUserReading').qtip(
 			{		
 				id:'userreading',
@@ -570,9 +522,9 @@ $(function() {
 		        }
 			});
 
-	/**
+	*//**
 	 * X人已读
-	 */
+	 *//*
 	$('#bookUserRead').qtip(
 			{		
 				id:'userread',
@@ -609,9 +561,9 @@ $(function() {
 		            }
 		        }
 			});
-	/**
+	*//**
 	 * X人想读
-	 */
+	 *//*
 	$('#bookUserWish').qtip(
 			{		
 				id:'userwish',
@@ -648,9 +600,9 @@ $(function() {
 		            }
 		        }
 			});
-	/**
+	*//**
 	 * X人推荐
-	 */
+	 *//*
 	$('#bookUserRecommend').qtip(
 			{		
 				id:'userrecommend',
@@ -801,9 +753,9 @@ $(function() {
 	});
 	
 
-	/**
+	*//**
 	 * 点星直接修改
-	 */
+	 *//*
 	$('#bookRate img').click(function(){
 		val = $(this).attr('id');
 		bid = $('#bid').val();		
@@ -1222,11 +1174,11 @@ function mbStringLength(s) {
 }
 
 
-/**
+*//**
  * 读取消息框中文字字数
  * 
  * @return
- */
+ *//*
 function getPostLength(txt)
 {
 	var _zh = txt ? txt.match(/[^ -~]/g) : 0;
@@ -1234,4 +1186,4 @@ function getPostLength(txt)
 	
 	return num;
 }
-
+*/

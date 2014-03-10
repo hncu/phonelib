@@ -1,3 +1,14 @@
+<script type="text/javascript">
+var t=setTimeout("load()",10)
+	function load(){
+	$.post("/phonelibV2/internalMessage/unreadMessage",
+			 function(data) {
+		 		if(data!=0){
+			 		document.getElementById('unreadMessage').innerHTML=data+"条未读";
+		 		}});
+	t=setTimeout("load()",60000)
+	}
+</script>
 <div class="navbar navbar-fixed-top">
 	<div class="navbar-inner">
 		<div class="container">
@@ -6,7 +17,12 @@
 				<span class="icon-bar"></span> <span class="icon-bar"></span> <span
 					class="icon-bar"></span>
 			</button>
-			<a class="brand" href="/phonelibV2/">手机图书馆</a>
+			<shiro:isNotLoggedIn>
+				<a class="brand" href="/phonelibV2/">手机图书馆</a>
+			</shiro:isNotLoggedIn>
+			<shiro:isLoggedIn>
+							<a class="brand" href="/phonelibV2/own/list">手机图书馆</a>
+			</shiro:isLoggedIn>
 			<div class="nav-collapse collapse">
 				<ul class="nav">
 					<li class="divider-vertical"></li>
@@ -14,17 +30,24 @@
 						<li class="active">
 					</g:if>
 					<g:else><li></g:else>
+					<shiro:isNotLoggedIn>
 								<a href="/phonelibV2/">首页</a>
-						</li>
-					<li class="divider-vertical"></li>
+								<li class="divider-vertical"></li>
+					</shiro:isNotLoggedIn>
+						
+					
 					<g:if test="${params.controller=="book"}">
 						<li class="active">
 					</g:if>
 					<g:else><li></g:else>
-					<li><a href="/phonelibV2/book/list">馆藏图书</a></li>
+					<a href="/phonelibV2/book/list">附近图书</a></li>
 					<li class="divider-vertical"></li>
 					
-					<li><a href="/phonelibV2/libbook/list">湖南城市学院图书馆查询</a></li>
+					<g:if test="${params.controller=="libbook"}">
+						<li class="active">
+					</g:if>
+					<g:else><li></g:else>
+					<a href="/phonelibV2/libbook/list">城院图书馆</a></li>
 					<li class="divider-vertical"></li>
 					
 					<shiro:hasRole name="ROLE_ADMIN">
@@ -53,7 +76,7 @@
 					<g:else><li class="dropdown"></g:else>
 		<a class="dropdown-toggle"  href="/phonelibV2/InternalMessage/list">
           <i class="icon-envelope"></i> 站内信
-          <span class="badge badge-info">1</span></a></li>
+          <div class="badge badge-info" name = "unreadMessage" id ="unreadMessage"></div></a></li>
 		<li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" href="#"><shiro:principal /><b class="caret"></b> </a>
 		<ul class="dropdown-menu">
 		<li > <a href="/phonelibV2/signup/accout"> <i class="icon-cog"></i> 个人设置 </a> </li>
